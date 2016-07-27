@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-
+#define ARRAY_MAX 30000
 
 void sort_smallest(int *arr, int startIndex, int endIndex) {
 	int smallestIndex=startIndex;
 	int i;
 	int tmp; 
 
-	printf("start from index: %d, end with index: %d\n", startIndex, endIndex);
 
 	for(i=startIndex+1; i<=endIndex; i++) {
 		if(arr[i]<=arr[smallestIndex]) {
@@ -34,6 +34,9 @@ int main(void) {
 	int size;
 	int *arr;
 	int i;
+	clock_t start, end;
+	
+	/*
 	printf("Enter an integer to create an array of int: ");
 	scanf("%d", &size);
 	
@@ -50,15 +53,23 @@ int main(void) {
 		printf("%d ", arr[i]);
 	}
 	printf("\n");
+	*/
+	size = 0;
+	while (size < ARRAY_MAX && 1 == scanf("%d", &arr[size])) {
+		size++;
+	}
 
+	start = clock();
 	sort(arr, size);
+	end = clock();
 
 	for(i = 0; i < size; i++) {
 		printf("%d ", arr[i]);
 	}
 	printf("\n");
-
 	
-	free(arr);
+	fprintf(stderr, "%d %f\n", size, (end-start)/(double)CLOCKS_PER_SEC);
+	
+ 	/*free(arr);*/
 	return 0;
 }
