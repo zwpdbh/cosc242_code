@@ -4,6 +4,13 @@
 
 #define ARRAY_MAX 30000
 
+/* given a array, select the smallest one in the range of
+ * array and move it to the first position indicated by
+ * startIndex
+ * @*arr is the pointer to the array
+ * @startIndex is the first position for given array
+ * @endIndex is the end position for givin array
+ * */
 void sort_smallest(int *arr, int startIndex, int endIndex) {
 	int smallestIndex=startIndex;
 	int i;
@@ -21,6 +28,12 @@ void sort_smallest(int *arr, int startIndex, int endIndex) {
 	arr[smallestIndex] = tmp;
 }
 
+/* loop through the array, each time, move an
+ * smallest item to the front of the array while
+ * reduce the loop range of array 
+ * @*arr holds the pointer to the array
+ * @size is the total number of item in the array
+ * */
 void sort(int *arr, int size) {
 	int i;
 	for(i = 0; i<size-1; i++) {
@@ -28,14 +41,22 @@ void sort(int *arr, int size) {
 	}
 }
 
-
-
+/**
+ * read integers and store them into an array
+ * then sort the array, at last print out the
+ * content of array
+ * */
 int main(void) {
+    /**
+     * size count the number of items in the array
+     * arr[] is the array with max_number 30000
+     * start and end is the record for time
+     * i is the index for looping via the array
+     * */
 	int size;
-	int *arr;
-	int i;
+    int arr[ARRAY_MAX];
 	clock_t start, end;
-	
+    int i;	
 	/*
 	printf("Enter an integer to create an array of int: ");
 	scanf("%d", &size);
@@ -64,9 +85,8 @@ int main(void) {
 	end = clock();
 
 	for(i = 0; i < size; i++) {
-		printf("%d ", arr[i]);
+		printf("%d\n", arr[i]);
 	}
-	printf("\n");
 	
 	fprintf(stderr, "%d %f\n", size, (end-start)/(double)CLOCKS_PER_SEC);
 	
