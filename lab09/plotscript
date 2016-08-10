@@ -1,0 +1,8 @@
+set key left
+set term postscript color solid
+set title "Sort comparison - zw"
+set xlabel "Number of items"
+set ylabel "Time"
+plot "mergesort.random" with linespoints, \
+"mergesort.sorted" with linespoints, \
+"mergesort.partially_sorted" with linespoints, \

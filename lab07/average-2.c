@@ -28,8 +28,8 @@ int main(void) {
     int i = 0;
     int count = 0;
     double total = 0.0;
-    char *arr[100];
-    char word[80];
+    char *arr[array_size];
+    char word[word_len];
 
     while(count < array_size && 1 == scanf("%s", word)) {
         arr[count] = emalloc((strlen(word) + 1) * sizeof arr[0][0]);
