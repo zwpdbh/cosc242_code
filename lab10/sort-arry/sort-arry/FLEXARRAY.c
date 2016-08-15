@@ -27,11 +27,13 @@ flexarray flexarray_new() {
 }
 
 void flexarray_append(flexarray f, int num) {
-    if (f->itemcount >= f->capacity) {
+    f->itemcount++;
+    if (f->itemcount == f->capacity) {
         f->capacity += f->capacity;
-        f = remalloc(f, f->capacity * sizeof(f->items[0]));
+        // remalloc on 'f->items'
+        f->items = remalloc(f->items, f->capacity * sizeof(f->items[0]));
     }
-    f->items[f->itemcount++] = num;
+    f->items[f->itemcount - 1] = num;
 }
 
 void flexarray_print(flexarray f) {
@@ -47,5 +49,6 @@ void flexarray_sort(flexarray f) {
 }
 
 void flexarray_free(flexarray f) {
+    free(f->items);
     free(f);
 }

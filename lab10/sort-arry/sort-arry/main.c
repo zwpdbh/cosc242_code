@@ -16,6 +16,7 @@ int main(void) {
     while (1 == scanf("%d", &item)) {
         flexarray_append(my_flexarray, item);
     }
+    
     flexarray_sort(my_flexarray);
     flexarray_print(my_flexarray);
     flexarray_free(my_flexarray);
