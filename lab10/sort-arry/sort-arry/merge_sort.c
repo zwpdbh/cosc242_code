@@ -62,6 +62,7 @@ void merge(int *arr, int l, int m, int r) {
     }
 }
 
+
 void insertion_sort(int *arr, int n) {
     int i;
     for (i = 1; i < n; i++) {
