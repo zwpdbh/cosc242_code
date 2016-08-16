@@ -12,6 +12,7 @@
 		DB036C251D62BB9500376D25 /* FLEXARRAY.c in Sources */ = {isa = PBXBuildFile; fileRef = DB036C1F1D62BB9500376D25 /* FLEXARRAY.c */; };
 		DB036C261D62BB9500376D25 /* merge_sort.c in Sources */ = {isa = PBXBuildFile; fileRef = DB036C211D62BB9500376D25 /* merge_sort.c */; };
 		DB036C271D62BB9500376D25 /* mylib.c in Sources */ = {isa = PBXBuildFile; fileRef = DB036C231D62BB9500376D25 /* mylib.c */; };
+		DB036C2D1D62BE3800376D25 /* RandomArray.c in Sources */ = {isa = PBXBuildFile; fileRef = DB036C2B1D62BE3800376D25 /* RandomArray.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +38,8 @@
 		DB036C221D62BB9500376D25 /* merge_sort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = merge_sort.h; path = "../../lab10/sort-arry/sort-arry/merge_sort.h"; sourceTree = "<group>"; };
 		DB036C231D62BB9500376D25 /* mylib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mylib.c; path = "../../lab10/sort-arry/sort-arry/mylib.c"; sourceTree = "<group>"; };
 		DB036C241D62BB9500376D25 /* mylib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mylib.h; path = "../../lab10/sort-arry/sort-arry/mylib.h"; sourceTree = "<group>"; };
+		DB036C2B1D62BE3800376D25 /* RandomArray.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RandomArray.c; sourceTree = "<group>"; };
+		DB036C2C1D62BE3800376D25 /* RandomArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomArray.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +81,8 @@
 				DB036C1C1D62BB7800376D25 /* quicksort.c */,
 				DB036C1D1D62BB7800376D25 /* quicksort.h */,
 				DB036C151D62BB6300376D25 /* main.c */,
+				DB036C2B1D62BE3800376D25 /* RandomArray.c */,
+				DB036C2C1D62BE3800376D25 /* RandomArray.h */,
 			);
 			path = "lib-c";
 			sourceTree = "<group>";
@@ -140,6 +145,7 @@
 			files = (
 				DB036C261D62BB9500376D25 /* merge_sort.c in Sources */,
 				DB036C271D62BB9500376D25 /* mylib.c in Sources */,
+				DB036C2D1D62BE3800376D25 /* RandomArray.c in Sources */,
 				DB036C251D62BB9500376D25 /* FLEXARRAY.c in Sources */,
 				DB036C161D62BB6300376D25 /* main.c in Sources */,
 				DB036C1E1D62BB7800376D25 /* quicksort.c in Sources */,

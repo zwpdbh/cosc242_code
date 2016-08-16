@@ -63,16 +63,21 @@ void merge(int *arr, int l, int m, int r) {
 }
 
 
-void insertion_sort(int *arr, int n) {
+void insertion_sort(int *arr, int size) {
+    /* use j to loop every elements
+     * in each loop, use i to do while loop
+     * key is the current item being selecting and comparing
+     * */
+    int j = 1;
     int i;
-    for (i = 1; i < n; i++) {
-        int j = i - 1;
-        int key = arr[i];
-        while (j >= 0 && key < arr[j]) {
-            arr[j+1] = arr[j];
-            j--;
+    for(j = 1; j < size; j++) {
+        int key = arr[j];
+        i = j - 1;
+        while(i >= 0 && arr[i] > key) {
+            arr[i+1] = arr[i];
+            i--;
         }
-        arr[j + 1] = key; 
+        arr[i+1] = key;
     }
 }
 
@@ -81,8 +86,11 @@ void insertion_sort(int *arr, int n) {
      */
 void merge_sor(int *arr, int l, int r) {
     if (l < r) {
-        if ((r - l) < 40) {
-            insertion_sort(arr + l, r - l + 1);
+        if ((r - l) < 80) {
+            int m = (l + r) / 2;
+            insertion_sort(arr, m - l + 1);
+            insertion_sort(&arr[m - l + 1], r - m);
+            merge(arr, l, m, r);
         } else {
             int m = (l + r) / 2;
             merge_sor(arr, l, m);
@@ -90,6 +98,12 @@ void merge_sor(int *arr, int l, int r) {
             merge_sor(arr + (m - l + 1), m + 1, r);
             merge(arr, l, m, r);	
         }
+//        int m = (l + r) / 2;
+//        merge_sor(arr, l, m);
+//        /*trickier, arr + (m - l + 1)*/
+////        merge_sor(arr + (m - l + 1), m + 1, r);
+//        merge_sor(&arr[m - l + 1], m+1, r);
+//        merge(arr, l, m, r);
     }
     
 }

@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "merge_sort.h"
 #include "quicksort.h"
+#include <time.h>
 
 struct flexarrayrec {
     int capacity;
@@ -40,15 +41,18 @@ void flexarray_append(flexarray f, int num) {
 void flexarray_print(flexarray f) {
     int i;
     for (i = 0; i < f->itemcount; i++) {
-        printf("%d ", f->items[i]);
+        printf("%d\n", f->items[i]);
     }
     printf("\n");
 }
 
 void flexarray_sort(flexarray f) {
-    quicksort(f->items, 0, f->itemcount - 1);
-    
-//    merge_sor(f->items, 0, f->itemcount - 1);
+    clock_t start, end;
+    start = clock();
+//    quicksort(f->items, 0, f->itemcount - 1);
+    merge_sor(f->items, 0, f->itemcount - 1);
+    end = clock();
+    fprintf(stderr, "%d %f\n", f->itemcount, (end - start) / (double)CLOCKS_PER_SEC);
 }
 
 void flexarray_free(flexarray f) {
