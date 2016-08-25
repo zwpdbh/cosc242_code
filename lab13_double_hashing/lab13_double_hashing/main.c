@@ -1,18 +1,23 @@
-//
-//  main.c
-//  lab13_double_hashing
-//
-//  Created by zwpdbh on 8/25/16.
-//  Copyright © 2016 Otago. All rights reserved.
-//
-
 #include <stdio.h>
-#include "FLEXARRAY.h"
-#include "htable.h"
+#include <stdlib.h>
 #include "mylib.h"
+#include "htable.h"
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
-    return 0;
+int main(void) {
+    htable h = htable_new(113);
+    char word[256];
+    char op;
+    
+    /* We must have a space before the %c */
+    while (2 == scanf(" %c %255s", &op, word)) {
+        if ('+' == op) {
+            htable_insert(h, word);
+        } else if ('?' == op) {
+            printf("%d %s\n", htable_search(h, word), word);
+        }
+    }
+
+    htable_free(h);
+    return EXIT_SUCCESS;
 }
+

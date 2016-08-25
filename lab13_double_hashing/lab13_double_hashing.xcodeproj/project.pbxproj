@@ -7,10 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DB65A0971D6E7756004FAE34 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DB65A0961D6E7756004FAE34 /* main.c */; };
-		DB65A0A31D6E776E004FAE34 /* FLEXARRAY.c in Sources */ = {isa = PBXBuildFile; fileRef = DB65A09D1D6E776E004FAE34 /* FLEXARRAY.c */; };
-		DB65A0A41D6E776E004FAE34 /* htable.c in Sources */ = {isa = PBXBuildFile; fileRef = DB65A09F1D6E776E004FAE34 /* htable.c */; };
-		DB65A0A51D6E776E004FAE34 /* mylib.c in Sources */ = {isa = PBXBuildFile; fileRef = DB65A0A11D6E776E004FAE34 /* mylib.c */; };
+		DB65A0B41D6F0158004FAE34 /* htable.c in Sources */ = {isa = PBXBuildFile; fileRef = DB65A0AF1D6F0158004FAE34 /* htable.c */; };
+		DB65A0B51D6F0158004FAE34 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DB65A0B11D6F0158004FAE34 /* main.c */; };
+		DB65A0B61D6F0158004FAE34 /* mylib.c in Sources */ = {isa = PBXBuildFile; fileRef = DB65A0B21D6F0158004FAE34 /* mylib.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,13 +26,11 @@
 
 /* Begin PBXFileReference section */
 		DB65A0931D6E7756004FAE34 /* lab13_double_hashing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = lab13_double_hashing; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB65A0961D6E7756004FAE34 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		DB65A09D1D6E776E004FAE34 /* FLEXARRAY.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FLEXARRAY.c; sourceTree = "<group>"; };
-		DB65A09E1D6E776E004FAE34 /* FLEXARRAY.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLEXARRAY.h; sourceTree = "<group>"; };
-		DB65A09F1D6E776E004FAE34 /* htable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = htable.c; sourceTree = "<group>"; };
-		DB65A0A01D6E776E004FAE34 /* htable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = htable.h; sourceTree = "<group>"; };
-		DB65A0A11D6E776E004FAE34 /* mylib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mylib.c; sourceTree = "<group>"; };
-		DB65A0A21D6E776E004FAE34 /* mylib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mylib.h; sourceTree = "<group>"; };
+		DB65A0AF1D6F0158004FAE34 /* htable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = htable.c; sourceTree = "<group>"; };
+		DB65A0B01D6F0158004FAE34 /* htable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = htable.h; sourceTree = "<group>"; };
+		DB65A0B11D6F0158004FAE34 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		DB65A0B21D6F0158004FAE34 /* mylib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mylib.c; sourceTree = "<group>"; };
+		DB65A0B31D6F0158004FAE34 /* mylib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mylib.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,13 +63,11 @@
 		DB65A0951D6E7756004FAE34 /* lab13_double_hashing */ = {
 			isa = PBXGroup;
 			children = (
-				DB65A09D1D6E776E004FAE34 /* FLEXARRAY.c */,
-				DB65A09E1D6E776E004FAE34 /* FLEXARRAY.h */,
-				DB65A09F1D6E776E004FAE34 /* htable.c */,
-				DB65A0A01D6E776E004FAE34 /* htable.h */,
-				DB65A0A11D6E776E004FAE34 /* mylib.c */,
-				DB65A0A21D6E776E004FAE34 /* mylib.h */,
-				DB65A0961D6E7756004FAE34 /* main.c */,
+				DB65A0AF1D6F0158004FAE34 /* htable.c */,
+				DB65A0B01D6F0158004FAE34 /* htable.h */,
+				DB65A0B11D6F0158004FAE34 /* main.c */,
+				DB65A0B21D6F0158004FAE34 /* mylib.c */,
+				DB65A0B31D6F0158004FAE34 /* mylib.h */,
 			);
 			path = lab13_double_hashing;
 			sourceTree = "<group>";
@@ -133,10 +128,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB65A0A41D6E776E004FAE34 /* htable.c in Sources */,
-				DB65A0A51D6E776E004FAE34 /* mylib.c in Sources */,
-				DB65A0A31D6E776E004FAE34 /* FLEXARRAY.c in Sources */,
-				DB65A0971D6E7756004FAE34 /* main.c in Sources */,
+				DB65A0B61D6F0158004FAE34 /* mylib.c in Sources */,
+				DB65A0B51D6F0158004FAE34 /* main.c in Sources */,
+				DB65A0B41D6F0158004FAE34 /* htable.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +251,7 @@
 				DB65A09C1D6E7756004FAE34 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
