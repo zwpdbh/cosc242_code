@@ -47,6 +47,7 @@ void htable_free(htable h) {
 int htable_insert(htable h, char *str) {
     unsigned int wordInteger = htable_word_to_int(str);
     unsigned int wordIndex = wordInteger % h->capacity;
+    unsigned int step = htable_step(h, wordInteger);
     
     if (h->frequencies[wordIndex] == 0) {
         h->items[wordIndex] = remalloc(h->items[wordIndex],
@@ -73,7 +74,7 @@ int htable_insert(htable h, char *str) {
                 h->frequencies[index]++;
                 return h->frequencies[index];
             }
-            index = (index + 1) % h->capacity;
+            index = (index + count * step) % h->capacity;
             count++;
         }
         return 0;
@@ -95,9 +96,10 @@ void htable_print(htable h, FILE *stream) {
 int htable_search(htable h, char *str) {
     int collision = 0;
     int searchIndex = htable_word_to_int(str) % h->capacity;
+    int step = htable_step(h, htable_word_to_int(str));
     
     while (h->items[searchIndex] != NULL && strcmp(str, h->items[searchIndex]) != 0 && collision <= h->capacity) {
-        searchIndex = (searchIndex + 1 ) % h->capacity;
+        searchIndex = (searchIndex + collision * step ) % h->capacity;
         collision++;
     }
     
