@@ -107,3 +107,7 @@ int htable_search(htable h, char *str) {
         return h->frequencies[searchIndex];
     }
 }
+
+static unsigned int htable_step(htable h, unsigned int i_key) {
+    return 1 + (i_key % (h->capacity - 1));
+}
