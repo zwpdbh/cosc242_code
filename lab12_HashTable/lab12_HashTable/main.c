@@ -7,6 +7,7 @@ int main(void) {
     htable h = htable_new(113);
     char word[256];
     char op;
+    
     /* We must have a space before the %c */
     while (2 == scanf(" %c %255s", &op, word)) {
         if ('+' == op) {
@@ -15,6 +16,8 @@ int main(void) {
             printf("%d %s\n", htable_search(h, word), word);
         }
     }
+
     htable_free(h);
     return EXIT_SUCCESS;
 }
+
