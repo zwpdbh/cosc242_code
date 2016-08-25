@@ -1,11 +1,3 @@
-//
-//  htable.c
-//  lab12_HashTable
-//
-//  Created by zwpdbh on 8/21/16.
-//  Copyright © 2016 Otago. All rights reserved.
-//
-
 #include "htable.h"
 #include "mylib.h"
 #include <stdio.h>
@@ -100,5 +92,18 @@ void htable_print(htable h, FILE *stream) {
 }
 
 int htable_search(htable h, char *str) {
-    return 0;
+    int collision = 0;
+    unsigned int wordInt = htable_word_to_int(str);
+    int searchIndex = wordInt % h->capacity;
+    
+    while (htable_word_to_int(h->items[searchIndex]) != wordInt && collision != h->capacity) {
+        searchIndex++;
+        collision++;
+    }
+    
+    if (collision == h->capacity) {
+        return 0;
+    }
+    
+    return h->frequencies[searchIndex];
 }

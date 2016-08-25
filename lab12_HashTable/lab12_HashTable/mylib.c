@@ -1,11 +1,3 @@
-//
-//  mylib.c
-//  sort-arry
-//
-//  Created by zwpdbh on 8/15/16.
-//  Copyright © 2016 Otago. All rights reserved.
-//
-
 #include "mylib.h"
 #include <stdio.h>
 #include <stdlib.h>

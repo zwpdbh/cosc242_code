@@ -1,11 +1,3 @@
-//
-//  htable.h
-//  lab12_HashTable
-//
-//  Created by zwpdbh on 8/21/16.
-//  Copyright © 2016 Otago. All rights reserved.
-//
-
 #ifndef htable_h
 #define htable_h
 
