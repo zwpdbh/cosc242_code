@@ -21,6 +21,7 @@ int main(void) {
             printf("%d %s\n", bst_search(b, word), word);
         }
     }
+    bst_preorder(b, print_key);
     
     return EXIT_SUCCESS;
 }
