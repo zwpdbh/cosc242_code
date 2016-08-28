@@ -19,30 +19,20 @@ bst bst_new() {
 bst bst_insert(bst b, char *str) {
     if (b == NULL) {
         b = emalloc(sizeof(bst));
-        
-        b->left = NULL;
-        b->right = NULL;
-        
         b->key = emalloc(sizeof(char) * (strlen(str) + 1));
         strcpy(b->key, str);
-
+        b->left = bst_new();
+        b->right = bst_new();
         return b;
-    }
-    
-    int keyInt = word_to_int(b->key);
-    int insertInt = word_to_int(str);
-    
-    if (strcmp(b->key, str) == 0) {
+    } else if (strcmp(b->key, str) == 0) {
         return b;
-    }
-    
-    if (insertInt > keyInt) {
-        b->right = bst_insert(b->right, str);
-    } else {
+    } else if (strcmp(str, b->key) < 0) {
         b->left = bst_insert(b->left, str);
+        return b;
+    } else {
+        b->right = bst_insert(b->right, str);
+        return b;
     }
-
-    return b;
 }
 
 int bst_search(bst b, char *str) {

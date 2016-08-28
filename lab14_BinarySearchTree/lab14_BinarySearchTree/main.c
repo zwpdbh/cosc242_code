@@ -9,11 +9,10 @@ void print_key(char *s) {
 
 
 int main(void) {
-
     char word[256];
     char op;
-    bst b = bst_new();
     
+    bst b = bst_new();
     
     while (2 == scanf(" %c %255s", &op, word)) {
         if ('+' == op) {
