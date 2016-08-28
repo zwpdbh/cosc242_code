@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "lab14_BinarySearchTree/bst.c"
-            timestampString = "494112746.508746"
+            timestampString = "494113025.229437"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
             landmarkName = "bst_insert()"
             landmarkType = "7">
          </BreakpointContent>

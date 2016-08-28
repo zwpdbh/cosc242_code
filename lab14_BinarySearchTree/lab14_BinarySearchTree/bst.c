@@ -12,17 +12,16 @@ struct bst_node {
 
 bst bst_new() {
     bst b = NULL;
-    
     return b;
 }
 
 bst bst_insert(bst b, char *str) {
     if (b == NULL) {
-        b = emalloc(sizeof(bst));
+        b = emalloc(sizeof(struct bst_node));
         b->key = emalloc(sizeof(char) * (strlen(str) + 1));
         strcpy(b->key, str);
-        b->left = bst_new();
-        b->right = bst_new();
+        b->left = NULL;
+        b->right = NULL;
         return b;
     } else if (strcmp(b->key, str) == 0) {
         return b;
