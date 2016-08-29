@@ -19,9 +19,12 @@ int main(void) {
             b = bst_insert(b, word);
         } else if ('?' == op) {
             printf("%d %s\n", bst_search(b, word), word);
+        } else if ('-' == op){
+            bst_delete(b, word);
+            printf("After delete %s, the bst is:\n", word);
+            bst_preorder(b, print_key);
         }
     }
-    bst_preorder(b, print_key);
     
     return EXIT_SUCCESS;
 }

@@ -2,6 +2,7 @@
 
 #include "bst.h"
 #include <string.h>
+#include <stdlib.h>
 #include "mylib.h"
 struct bst_node {
     char *key;
@@ -65,7 +66,61 @@ void bst_preorder(bst b, void f(char *str)) {
     bst_preorder(b->right, f);
 }
 
-/**
- extern bst bst_delete(bst b, char *str);
- extern bst bst_free(bst b);
- */
+bst bst_delete(bst b, char *str) {
+    if (b == NULL) {
+        return b;
+    }
+    if (strcmp(b->key, str) > 0) {
+        return bst_delete(b->left, str);
+    } else if (strcmp(b->key, str) < 0) {
+        return bst_delete(b->right, str);
+    } else {
+        /**
+         This is the case where find the key, and need to delete the node.
+         */
+        if (b->left == NULL && b->right == NULL) {
+            free(b->key);
+            b->key = NULL;
+            free(b);
+            b = NULL;
+            return b;
+        } else if (b->left == NULL && b->right != NULL) {
+            bst tmp = b;
+            b = b->right;
+            free(tmp->key);
+            free(tmp->right);
+            tmp->right = NULL;
+            return b;
+        } else if (b->right == NULL && b->left != NULL) {
+            bst tmp = b;
+            b = b->left;
+            free(tmp->key);
+            free(tmp->left);
+            tmp->left = NULL;
+            return b;
+        } else {
+            bst left_most;
+            bst left = b->right;
+            while (left != NULL) {
+                left = left->left;
+            }
+            left_most = left;
+            swap(left_most->key, b->key);
+            return bst_delete(b->right, str);
+        }
+    }
+}
+
+
+
+bst bst_free(bst b) {
+    free(b->key);
+    b->key = NULL;
+    free(b->left);
+    b->left = NULL;
+    free(b->right);
+    b->right = NULL;
+    free(b);
+    b = NULL;
+    return NULL;
+}
