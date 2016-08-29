@@ -71,42 +71,46 @@ bst bst_delete(bst b, char *str) {
         return b;
     }
     if (strcmp(b->key, str) > 0) {
-        return bst_delete(b->left, str);
+        b->left = bst_delete(b->left, str);
+        return b;
     } else if (strcmp(b->key, str) < 0) {
-        return bst_delete(b->right, str);
+        b->right = bst_delete(b->right, str);
+        return b;
     } else {
         /**
          This is the case where find the key, and need to delete the node.
          */
         if (b->left == NULL && b->right == NULL) {
             free(b->key);
-            b->key = NULL;
             free(b);
             b = NULL;
             return b;
         } else if (b->left == NULL && b->right != NULL) {
-            bst tmp = b;
+            free(b->key);
+            free(b->right);
             b = b->right;
-            free(tmp->key);
-            free(tmp->right);
-            tmp->right = NULL;
             return b;
         } else if (b->right == NULL && b->left != NULL) {
-            bst tmp = b;
+            free(b->key);
+            free(b->left);
             b = b->left;
-            free(tmp->key);
-            free(tmp->left);
-            tmp->left = NULL;
             return b;
         } else {
             bst left_most;
-            bst left = b->right;
-            while (left != NULL) {
-                left = left->left;
+            char word[256];
+            bst rightSubTree = b->right;
+            while (rightSubTree->left != NULL) {
+                rightSubTree = rightSubTree->left;
             }
-            left_most = left;
-            swap(left_most->key, b->key);
-            return bst_delete(b->right, str);
+            left_most = rightSubTree;
+            
+            strcpy(word, left_most->key);
+            left_most->key = remalloc(left_most->key, strlen(b->key));
+            strcpy(left_most->key, b->key);
+            strcpy(b->key, word);
+            
+            b->right = bst_delete(b->right, str);
+            return b;
         }
     }
 }

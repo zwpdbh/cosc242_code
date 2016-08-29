@@ -38,20 +38,3 @@ unsigned int word_to_int(char *word) {
     }
     return result;
 }
-
-void swap(char *key1, char *key2) {
-    char *word1 = key1;
-    char *word2 = key2;
-    
-    unsigned long len1 = strlen(key1);
-    unsigned long len2 = strlen(key2);
-    
-    key1 = remalloc(key1, len2);
-    key2 = remalloc(key2, len1);
-    
-    strcmp(key1, word2);
-    strcmp(key2, word1);
-    
-    free(word1);
-    free(word2);
-}
