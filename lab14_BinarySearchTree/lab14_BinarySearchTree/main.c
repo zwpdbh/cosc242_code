@@ -2,6 +2,8 @@
 #include "mylib.h"
 #include "bst.h"
 #include <stdlib.h>
+#include <stdio.h>
+
 
 void print_key(char *s) {
     printf("%s\n", s);
@@ -11,10 +13,16 @@ void print_key(char *s) {
 int main(void) {
     char word[256];
     char op;
+    FILE *infile;
     
     bst b = bst_new();
     
-    while (2 == scanf(" %c %255s", &op, word)) {
+    if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/lab14_BinarySearchTree/lab14_BinarySearchTree/search-test.txt", "r"))) {
+        fprintf(stderr, "can’t find file\n");
+        return EXIT_FAILURE;
+    }
+    
+    while (2 == fscanf(infile, " %c %255s", &op, word)) {
         if ('+' == op) {
             b = bst_insert(b, word);
         } else if ('?' == op) {

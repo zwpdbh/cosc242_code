@@ -99,12 +99,12 @@ bst bst_delete(bst b, char *str) {
             return b;
         } else if (b->left == NULL && b->right != NULL) {
             free(b->key);
-            free(b->right);
+            free(b);
             b = b->right;
             return b;
         } else if (b->right == NULL && b->left != NULL) {
             free(b->key);
-            free(b->left);
+            free(b);
             b = b->left;
             return b;
         } else {
