@@ -25,135 +25,135 @@ struct rbt_node {
 
 
 rbt rbt_new() {
-    rbt b = NULL;
-    return b;
+    rbt r = NULL;
+    return r;
 }
 
-rbt rbt_insert(rbt b, char *str) {
-    if (b == NULL) {
-        b = emalloc(sizeof(struct rbt_node));
-        b->key = emalloc(sizeof(char) * (strlen(str) + 1));
-        strcpy(b->key, str);
-        b->left = NULL;
-        b->right = NULL;
-        return b;
-    } else if (strcmp(b->key, str) == 0) {
-        return b;
-    } else if (strcmp(str, b->key) < 0) {
-        b->left = rbt_insert(b->left, str);
-        return b;
+rbt rbt_insert(rbt r, char *str) {
+    if (r == NULL) {
+        r = emalloc(sizeof(struct rbt_node));
+        r->key = emalloc(sizeof(char) * (strlen(str) + 1));
+        strcpy(r->key, str);
+        r->left = NULL;
+        r->right = NULL;
+        return r;
+    } else if (strcmp(r->key, str) == 0) {
+        return r;
+    } else if (strcmp(str, r->key) < 0) {
+        r->left = rbt_insert(r->left, str);
+        return r;
     } else {
-        b->right = rbt_insert(b->right, str);
-        return b;
+        r->right = rbt_insert(r->right, str);
+        return r;
     }
 }
 
-int rbt_search(rbt b, char *str) {
-    if (b == NULL) {
+int rbt_search(rbt r, char *str) {
+    if (r == NULL) {
         return 0;
     }
-    if (strcmp(str, b->key) == 0) {
+    if (strcmp(str, r->key) == 0) {
         return 1;
-    } else if (strcmp(str, b->key) < 0) {
-        return rbt_search(b->left, str);
+    } else if (strcmp(str, r->key) < 0) {
+        return rbt_search(r->left, str);
     } else {
-        return rbt_search(b->right, str);
+        return rbt_search(r->right, str);
     }
 }
 
-void rbt_inorder(rbt b, void f(char *str)) {
-    if (b == NULL) {
+void rbt_inorder(rbt r, void f(char *str)) {
+    if (r == NULL) {
         return;
     }
-    if (b->left != NULL) {
-        rbt_inorder(b->left, f);
+    if (r->left != NULL) {
+        rbt_inorder(r->left, f);
     }
-    if (b->key != NULL) {
-        f(b->key);
+    if (r->key != NULL) {
+        f(r->key);
     }
-    if (b->right != NULL) {
-        rbt_inorder(b->right, f);
+    if (r->right != NULL) {
+        rbt_inorder(r->right, f);
     }
 }
 
-void rbt_preorder(rbt b, void f(char *str)) {
-    if (b == NULL) {
+void rbt_preorder(rbt r, void f(char *str)) {
+    if (r == NULL) {
         return;
     }
-    if (b->key != NULL) {
-        f(b->key);
+    if (r->key != NULL) {
+        f(r->key);
     }
-    if (b->left != NULL) {
-        rbt_preorder(b->left, f);
+    if (r->left != NULL) {
+        rbt_preorder(r->left, f);
     }
-    if (b->right != NULL) {
-        rbt_preorder(b->right, f);
+    if (r->right != NULL) {
+        rbt_preorder(r->right, f);
     }
 }
 
-rbt rbt_delete(rbt b, char *str) {
-    if (b == NULL) {
-        return b;
+rbt rbt_delete(rbt r, char *str) {
+    if (r == NULL) {
+        return r;
     }
-    if (strcmp(b->key, str) > 0) {
-        b->left = rbt_delete(b->left, str);
-        return b;
-    } else if (strcmp(b->key, str) < 0) {
-        b->right = rbt_delete(b->right, str);
-        return b;
+    if (strcmp(r->key, str) > 0) {
+        r->left = rbt_delete(r->left, str);
+        return r;
+    } else if (strcmp(r->key, str) < 0) {
+        r->right = rbt_delete(r->right, str);
+        return r;
     } else {
         /**
          This is the case where find the key, and need to delete the node.
          */
-        if (b->left == NULL && b->right == NULL) {
-            free(b->key);
-            free(b);
-            b = NULL;
-            return b;
-        } else if (b->left == NULL && b->right != NULL) {
-            free(b->key);
-            free(b);
-            b = b->right;
-            return b;
-        } else if (b->right == NULL && b->left != NULL) {
-            free(b->key);
-            free(b);
-            b = b->left;
-            return b;
+        if (r->left == NULL && r->right == NULL) {
+            free(r->key);
+            free(r);
+            r = NULL;
+            return r;
+        } else if (r->left == NULL && r->right != NULL) {
+            free(r->key);
+            free(r);
+            r = r->right;
+            return r;
+        } else if (r->right == NULL && r->left != NULL) {
+            free(r->key);
+            free(r);
+            r = r->left;
+            return r;
         } else {
             rbt left_most;
             char word[256];
-            rbt rightSubTree = b->right;
+            rbt rightSubTree = r->right;
             while (rightSubTree->left != NULL) {
                 rightSubTree = rightSubTree->left;
             }
             left_most = rightSubTree;
             
             strcpy(word, left_most->key);
-            left_most->key = remalloc(left_most->key, strlen(b->key));
-            strcpy(left_most->key, b->key);
-            strcpy(b->key, word);
+            left_most->key = remalloc(left_most->key, strlen(r->key));
+            strcpy(left_most->key, r->key);
+            strcpy(r->key, word);
             
-            b->right = rbt_delete(b->right, str);
-            return b;
+            r->right = rbt_delete(r->right, str);
+            return r;
         }
     }
 }
 
 
 
-rbt rbt_free(rbt b) {
-    if (b == NULL) {
+rbt rbt_free(rbt r) {
+    if (r == NULL) {
         return NULL;
-    } else if (b->key !=NULL && b->left == NULL && b->right == NULL) {
-        free(b->key);
-        b->key = NULL;
-        free(b);
-        b = NULL;
-        return rbt_free(b);
+    } else if (r->key !=NULL && r->left == NULL && r->right == NULL) {
+        free(r->key);
+        r->key = NULL;
+        free(r);
+        r = NULL;
+        return rbt_free(r);
     } else {
-        b->left = rbt_free(b->left);
-        b->right = rbt_free(b->right);
-        return rbt_free(b);
+        r->left = rbt_free(r->left);
+        r->right = rbt_free(r->right);
+        return rbt_free(r);
     }
 }
