@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 typedef struct rbt_node *rbt;
+typedef enum { RED, BLACK } rbt_colour;
 
 extern rbt rbt_delete(rbt b, char *str);
 extern rbt rbt_free(rbt b);

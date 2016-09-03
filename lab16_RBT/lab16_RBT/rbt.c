@@ -12,10 +12,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include "mylib.h"
+
+#define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
+#define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
+
 struct rbt_node {
     char *key;
     rbt left;
     rbt right;
+    rbt_colour colour;
 };
 
 
