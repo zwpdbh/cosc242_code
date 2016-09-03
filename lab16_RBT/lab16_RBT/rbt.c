@@ -1,24 +1,32 @@
+//
+//  rbt.c
+//  lab16_RBT
+//
+//  Created by zwpdbh on 9/3/16.
+//  Copyright © 2016 Otago. All rights reserved.
+//
 
 
-#include "bst.h"
+
+#include "rbt.h"
 #include <string.h>
 #include <stdlib.h>
 #include "mylib.h"
-struct bst_node {
+struct rbt_node {
     char *key;
-    bst left;
-    bst right;
+    rbt left;
+    rbt right;
 };
 
 
-bst bst_new() {
-    bst b = NULL;
+rbt rbt_new() {
+    rbt b = NULL;
     return b;
 }
 
-bst bst_insert(bst b, char *str) {
+rbt rbt_insert(rbt b, char *str) {
     if (b == NULL) {
-        b = emalloc(sizeof(struct bst_node));
+        b = emalloc(sizeof(struct rbt_node));
         b->key = emalloc(sizeof(char) * (strlen(str) + 1));
         strcpy(b->key, str);
         b->left = NULL;
@@ -27,43 +35,43 @@ bst bst_insert(bst b, char *str) {
     } else if (strcmp(b->key, str) == 0) {
         return b;
     } else if (strcmp(str, b->key) < 0) {
-        b->left = bst_insert(b->left, str);
+        b->left = rbt_insert(b->left, str);
         return b;
     } else {
-        b->right = bst_insert(b->right, str);
+        b->right = rbt_insert(b->right, str);
         return b;
     }
 }
 
-int bst_search(bst b, char *str) {
+int rbt_search(rbt b, char *str) {
     if (b == NULL) {
         return 0;
     }
     if (strcmp(str, b->key) == 0) {
         return 1;
     } else if (strcmp(str, b->key) < 0) {
-        return bst_search(b->left, str);
+        return rbt_search(b->left, str);
     } else {
-        return bst_search(b->right, str);
+        return rbt_search(b->right, str);
     }
 }
 
-void bst_inorder(bst b, void f(char *str)) {
+void rbt_inorder(rbt b, void f(char *str)) {
     if (b == NULL) {
         return;
     }
     if (b->left != NULL) {
-        bst_inorder(b->left, f);
+        rbt_inorder(b->left, f);
     }
     if (b->key != NULL) {
         f(b->key);
     }
     if (b->right != NULL) {
-        bst_inorder(b->right, f);
+        rbt_inorder(b->right, f);
     }
 }
 
-void bst_preorder(bst b, void f(char *str)) {
+void rbt_preorder(rbt b, void f(char *str)) {
     if (b == NULL) {
         return;
     }
@@ -71,22 +79,22 @@ void bst_preorder(bst b, void f(char *str)) {
         f(b->key);
     }
     if (b->left != NULL) {
-        bst_preorder(b->left, f);
+        rbt_preorder(b->left, f);
     }
     if (b->right != NULL) {
-        bst_preorder(b->right, f);
+        rbt_preorder(b->right, f);
     }
 }
 
-bst bst_delete(bst b, char *str) {
+rbt rbt_delete(rbt b, char *str) {
     if (b == NULL) {
         return b;
     }
     if (strcmp(b->key, str) > 0) {
-        b->left = bst_delete(b->left, str);
+        b->left = rbt_delete(b->left, str);
         return b;
     } else if (strcmp(b->key, str) < 0) {
-        b->right = bst_delete(b->right, str);
+        b->right = rbt_delete(b->right, str);
         return b;
     } else {
         /**
@@ -108,9 +116,9 @@ bst bst_delete(bst b, char *str) {
             b = b->left;
             return b;
         } else {
-            bst left_most;
+            rbt left_most;
             char word[256];
-            bst rightSubTree = b->right;
+            rbt rightSubTree = b->right;
             while (rightSubTree->left != NULL) {
                 rightSubTree = rightSubTree->left;
             }
@@ -121,7 +129,7 @@ bst bst_delete(bst b, char *str) {
             strcpy(left_most->key, b->key);
             strcpy(b->key, word);
             
-            b->right = bst_delete(b->right, str);
+            b->right = rbt_delete(b->right, str);
             return b;
         }
     }
@@ -129,7 +137,7 @@ bst bst_delete(bst b, char *str) {
 
 
 
-bst bst_free(bst b) {
+rbt rbt_free(rbt b) {
     if (b == NULL) {
         return NULL;
     } else if (b->key !=NULL && b->left == NULL && b->right == NULL) {
@@ -137,10 +145,10 @@ bst bst_free(bst b) {
         b->key = NULL;
         free(b);
         b = NULL;
-        return bst_free(b);
+        return rbt_free(b);
     } else {
-        b->left = bst_free(b->left);
-        b->right = bst_free(b->right);
-        return bst_free(b);
+        b->left = rbt_free(b->left);
+        b->right = rbt_free(b->right);
+        return rbt_free(b);
     }
 }
