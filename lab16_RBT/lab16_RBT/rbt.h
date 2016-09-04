@@ -16,5 +16,6 @@ extern int rbt_search(rbt r, char *key);
 extern rbt right_rotate(rbt r);
 extern rbt left_rotate(rbt r);
 extern rbt flipColour(rbt r);
+extern rbt setColourBlack(rbt r);
 
 #endif /* rbt_h */

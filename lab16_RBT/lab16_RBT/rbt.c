@@ -78,12 +78,14 @@ rbt rbt_insert(rbt r, char *str) {
     if (IS_RED(r->right) && IS_BLACK(r->left)) {
         printf("Rotate Left on: %s\n", r->key);
         r = left_rotate(r);
-    } else if (IS_RED(r->left) && IS_RED(r->left->left)) {
+    }
+    if (IS_RED(r->left) && IS_RED(r->left->left)) {
         printf("Rotate Right on: %s\n", r->key);
         r = right_rotate(r);
-    } else if (IS_RED(r->left) && IS_RED(r->right)) {
+    }
+    if (IS_RED(r->left) && IS_RED(r->right)) {
         printf("Flip colour on: %s\n", r->key);
-        flipColour(r);
+        r = flipColour(r);
     }
     
     return r;
@@ -204,4 +206,7 @@ rbt rbt_free(rbt r) {
     }
 }
 
-
+rbt setColourBlack(rbt r) {
+    r->colour = BLACK;
+    return r;
+}
