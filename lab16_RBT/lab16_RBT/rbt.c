@@ -32,6 +32,7 @@ rbt rbt_new() {
 rbt rbt_insert(rbt r, char *str) {
     if (r == NULL) {
         r = emalloc(sizeof(struct rbt_node));
+        r->colour = RED;
         r->key = emalloc(sizeof(char) * (strlen(str) + 1));
         strcpy(r->key, str);
         r->left = NULL;
@@ -156,4 +157,32 @@ rbt rbt_free(rbt r) {
         r->right = rbt_free(r->right);
         return rbt_free(r);
     }
+}
+
+rbt rotate_left(rbt r) {
+    rbt x = r->right;
+    r->right = x->left;
+    x->left = r;
+    
+    x->colour = r->colour;
+    r->colour = RED;
+    
+    return x;
+}
+
+rbt right_rotate(rbt r) {
+    rbt x = r->left;
+    r->left = x->right;
+    x->right = r;
+    
+    x->colour = r->colour;
+    r->colour = RED;
+    
+    return x;
+}
+
+void flipColour(rbt r) {
+    r->colour = RED;
+    r->left->colour = BLACK;
+    r->right->colour = BLACK;
 }
