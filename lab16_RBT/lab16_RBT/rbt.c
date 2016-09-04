@@ -124,6 +124,11 @@ void rbt_preorder(rbt r, void f(char *str)) {
         return;
     }
     if (r->key != NULL) {
+        if (IS_RED(r)) {
+            printf("black:\t");
+        } else {
+            printf("red:\t\t");
+        }
         f(r->key);
     }
     if (r->left != NULL) {
