@@ -1,11 +1,3 @@
-//
-//  rbt.h
-//  lab16_RBT
-//
-//  Created by zwpdbh on 9/3/16.
-//  Copyright © 2016 Otago. All rights reserved.
-//
-
 
 #ifndef rbt_h
 #define rbt_h

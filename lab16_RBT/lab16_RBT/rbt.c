@@ -1,13 +1,3 @@
-//
-//  rbt.c
-//  lab16_RBT
-//
-//  Created by zwpdbh on 9/3/16.
-//  Copyright © 2016 Otago. All rights reserved.
-//
-
-
-
 #include "rbt.h"
 #include <string.h>
 #include <stdlib.h>
@@ -25,7 +15,7 @@ struct rbt_node {
 
 
 rbt left_rotate(rbt r) {
-    printf("Rotate Left on: %s\n", r->key);
+    
     rbt x = r->right;
     r->right = x->left;
     x->left = r;
@@ -33,11 +23,13 @@ rbt left_rotate(rbt r) {
     x->colour = r->colour;
     r->colour = RED;
     
+    
+    
     return x;
 }
 
 rbt right_rotate(rbt r) {
-    printf("Rotate Right on: %s\n", r->key);
+    
     rbt x = r->left;
     r->left = x->right;
     x->right = r;
@@ -45,10 +37,13 @@ rbt right_rotate(rbt r) {
     x->colour = r->colour;
     r->colour = RED;
     
+
+    
     return x;
 }
 
 rbt flipColour(rbt r) {
+    
     r->colour = RED;
     r->left->colour = BLACK;
     r->right->colour = BLACK;
@@ -78,15 +73,16 @@ rbt rbt_insert(rbt r, char *str) {
         r->left = rbt_insert(r->left, str);
     } else if (cmp > 0) {
         r->right = rbt_insert(r->right, str);
-    } else {
-        r->key = str;
     }
     
     if (IS_RED(r->right) && IS_BLACK(r->left)) {
+        printf("Rotate Left on: %s\n", r->key);
         r = left_rotate(r);
     } else if (IS_RED(r->left) && IS_RED(r->left->left)) {
+        printf("Rotate Right on: %s\n", r->key);
         r = right_rotate(r);
     } else if (IS_RED(r->left) && IS_RED(r->right)) {
+        printf("Flip colour on: %s\n", r->key);
         flipColour(r);
     }
     
