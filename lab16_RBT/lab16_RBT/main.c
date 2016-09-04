@@ -15,28 +15,33 @@ int main(void) {
     char op;
     FILE *infile;
     
-    while (1) {
-        rbt b = rbt_new();
+    int count = 1;
+    while (count > 0) {
+        rbt r =  rbt_new();
         
-        if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/lab14_BinarySearchTree/lab14_BinarySearchTree/search-test.txt", "r"))) {
+        if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/lab16_RBT/test.txt", "r"))) {
             fprintf(stderr, "can’t find file\n");
             return EXIT_FAILURE;
         }
         
         while (2 == fscanf(infile, " %c %255s", &op, word)) {
             if ('+' == op) {
-                b = rbt_insert(b, word);
+                r =  rbt_insert(r, word);
             } else if ('?' == op) {
-                printf("%d %s\n", rbt_search(b, word), word);
+                printf("%d %s\n", rbt_search(r, word), word);
             } else if ('-' == op){
-                b = rbt_delete(b, word);
+                r =  rbt_delete(r, word);
                 printf("After delete %s, the rbt is:\n", word);
-                rbt_preorder(b, print_key);
+                rbt_preorder(r, print_key);
             }
         }
         
-        rbt_free(b);
+        rbt_preorder(r, print_key);
+        
+        rbt_free(r);
         fclose(infile);
+        
+        count = count - 1;
     }
     
     return EXIT_SUCCESS;

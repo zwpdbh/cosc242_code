@@ -23,6 +23,6 @@ extern void rbt_preorder(rbt r, void f(char *str));
 extern int rbt_search(rbt r, char *key);
 extern rbt right_rotate(rbt r);
 extern rbt left_rotate(rbt r);
-extern void flipColour(rbt r);
+extern rbt flipColour(rbt r);
 
 #endif /* rbt_h */

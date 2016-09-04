@@ -24,12 +24,43 @@ struct rbt_node {
 };
 
 
+rbt left_rotate(rbt r) {
+    rbt x = r->right;
+    r->right = x->left;
+    x->left = r;
+    
+    x->colour = r->colour;
+    r->colour = RED;
+    
+    return x;
+}
+
+rbt right_rotate(rbt r) {
+    rbt x = r->left;
+    r->left = x->right;
+    x->right = r;
+    
+    x->colour = r->colour;
+    r->colour = RED;
+    
+    return x;
+}
+
+rbt flipColour(rbt r) {
+    r->colour = RED;
+    r->left->colour = BLACK;
+    r->right->colour = BLACK;
+    
+    return r;
+}
+
 rbt rbt_new() {
     rbt r = NULL;
     return r;
 }
 
 rbt rbt_insert(rbt r, char *str) {
+    int cmp;
     if (r == NULL) {
         r = emalloc(sizeof(struct rbt_node));
         r->colour = RED;
@@ -38,15 +69,26 @@ rbt rbt_insert(rbt r, char *str) {
         r->left = NULL;
         r->right = NULL;
         return r;
-    } else if (strcmp(r->key, str) == 0) {
-        return r;
-    } else if (strcmp(str, r->key) < 0) {
-        r->left = rbt_insert(r->left, str);
-        return r;
-    } else {
-        r->right = rbt_insert(r->right, str);
-        return r;
     }
+    
+    cmp = strcmp(str, r->key);
+    if (cmp < 0) {
+        r->left = rbt_insert(r->left, str);
+    } else if (cmp > 0) {
+        r->right = rbt_insert(r->right, str);
+    } else {
+        r->key = str;
+    }
+    
+    if (IS_RED(r->right) && IS_BLACK(r->left)) {
+        r = left_rotate(r);
+    } else if (IS_RED(r->left) && IS_RED(r->left->left)) {
+        r = right_rotate(r);
+    } else if (IS_RED(r->left) && IS_RED(r->right)) {
+        flipColour(r);
+    }
+    
+    return r;
 }
 
 int rbt_search(rbt r, char *str) {
@@ -159,30 +201,4 @@ rbt rbt_free(rbt r) {
     }
 }
 
-rbt rotate_left(rbt r) {
-    rbt x = r->right;
-    r->right = x->left;
-    x->left = r;
-    
-    x->colour = r->colour;
-    r->colour = RED;
-    
-    return x;
-}
 
-rbt right_rotate(rbt r) {
-    rbt x = r->left;
-    r->left = x->right;
-    x->right = r;
-    
-    x->colour = r->colour;
-    r->colour = RED;
-    
-    return x;
-}
-
-void flipColour(rbt r) {
-    r->colour = RED;
-    r->left->colour = BLACK;
-    r->right->colour = BLACK;
-}
