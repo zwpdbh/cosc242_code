@@ -27,6 +27,8 @@ int main(void) {
         while (2 == fscanf(infile, " %c %255s", &op, word)) {
             if ('+' == op) {
                 r =  rbt_insert(r, word);
+                rbt_preorder(r, print_key);
+                printf("\n");
             } else if ('?' == op) {
                 printf("%d %s\n", rbt_search(r, word), word);
             } else if ('-' == op){

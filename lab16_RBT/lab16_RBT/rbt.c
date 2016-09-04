@@ -25,6 +25,7 @@ struct rbt_node {
 
 
 rbt left_rotate(rbt r) {
+    printf("Rotate Left on: %s\n", r->key);
     rbt x = r->right;
     r->right = x->left;
     x->left = r;
@@ -36,6 +37,7 @@ rbt left_rotate(rbt r) {
 }
 
 rbt right_rotate(rbt r) {
+    printf("Rotate Right on: %s\n", r->key);
     rbt x = r->left;
     r->left = x->right;
     x->right = r;
@@ -125,9 +127,9 @@ void rbt_preorder(rbt r, void f(char *str)) {
     }
     if (r->key != NULL) {
         if (IS_RED(r)) {
+            printf("red:\t");
+        } else if (IS_BLACK(r)) {
             printf("black:\t");
-        } else {
-            printf("red:\t\t");
         }
         f(r->key);
     }
