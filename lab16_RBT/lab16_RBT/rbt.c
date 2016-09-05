@@ -56,8 +56,26 @@ rbt rbt_new() {
     return r;
 }
 
+rbt rbt_fix(rbt r) {
+    if (IS_RED(r->right) && IS_BLACK(r->left)) {
+        printf("Rotate Left on: %s\n", r->key);
+        r = left_rotate(r);
+    }
+    if (IS_RED(r->left) && IS_RED(r->left->left)) {
+        printf("Rotate Right on: %s\n", r->key);
+        r = right_rotate(r);
+    }
+    if (IS_RED(r->left) && IS_RED(r->right)) {
+        printf("Flip colour on: %s\n", r->key);
+        r = flipColour(r);
+    }
+    
+    return r;
+}
+
 rbt rbt_insert(rbt r, char *str) {
     int cmp;
+    
     if (r == NULL) {
         r = emalloc(sizeof(struct rbt_node));
         r->colour = RED;
@@ -75,18 +93,7 @@ rbt rbt_insert(rbt r, char *str) {
         r->right = rbt_insert(r->right, str);
     }
     
-    if (IS_RED(r->right) && IS_BLACK(r->left)) {
-        printf("Rotate Left on: %s\n", r->key);
-        r = left_rotate(r);
-    }
-    if (IS_RED(r->left) && IS_RED(r->left->left)) {
-        printf("Rotate Right on: %s\n", r->key);
-        r = right_rotate(r);
-    }
-    if (IS_RED(r->left) && IS_RED(r->right)) {
-        printf("Flip colour on: %s\n", r->key);
-        r = flipColour(r);
-    }
+    r = rbt_fix(r);
     
     return r;
 }

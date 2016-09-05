@@ -17,5 +17,6 @@ extern rbt right_rotate(rbt r);
 extern rbt left_rotate(rbt r);
 extern rbt flipColour(rbt r);
 extern rbt setColourBlack(rbt r);
+extern rbt rbt_fix(rbt r);
 
 #endif /* rbt_h */
