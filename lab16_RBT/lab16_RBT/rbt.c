@@ -23,8 +23,6 @@ rbt left_rotate(rbt r) {
     x->colour = r->colour;
     r->colour = RED;
     
-    
-    
     return x;
 }
 
@@ -36,9 +34,7 @@ rbt right_rotate(rbt r) {
     
     x->colour = r->colour;
     r->colour = RED;
-    
 
-    
     return x;
 }
 
