@@ -20,9 +20,6 @@ rbt left_rotate(rbt r) {
     r->right = x->left;
     x->left = r;
     
-//    x->colour = r->colour;
-//    r->colour = RED;
-    
     return x;
 }
 
@@ -31,9 +28,6 @@ rbt right_rotate(rbt r) {
     rbt x = r->left;
     r->left = x->right;
     x->right = r;
-    
-//    x->colour = r->colour;
-//    r->colour = RED;
 
     return x;
 }
@@ -93,21 +87,6 @@ rbt rbt_fix(rbt r) {
         r->left->colour = RED;
         r->right->colour = RED;
     }
-    
-    /**
-     if (IS_RED(r->right) && IS_BLACK(r->left)) {
-     printf("Rotate Left on: %s\n", r->key);
-     r = left_rotate(r);
-     }
-     if (IS_RED(r->left) && IS_RED(r->left->left)) {
-     printf("Rotate Right on: %s\n", r->key);
-     r = right_rotate(r);
-     }
-     if (IS_RED(r->left) && IS_RED(r->right)) {
-     printf("Flip colour on: %s\n", r->key);
-     r = flipColour(r);
-     }
-     */
     
     return r;
 }
