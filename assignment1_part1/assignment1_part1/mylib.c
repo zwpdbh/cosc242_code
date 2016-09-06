@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
+#include <math.h>
 
 void *emalloc(size_t s) {
     void *result = malloc(s);
@@ -52,4 +53,27 @@ int getword(char *s, int limit, FILE *stream) {
     }
     *w = '\0';
     return w - s;
+}
+
+static int factor(int x) {
+    int f = 2;
+    while (f <= sqrt(x)) {
+        if (x % f == 0) {
+            return 0;
+        } else {
+            f = f + 1;
+        }
+    }
+    return 1;
+}
+extern int primegt(int n) {
+    int bound = n + 1;
+    while (bound > 0) {
+        if (factor(bound)) {
+            printf("The next prime greater than %d is: %d\n", n, bound);
+        } else {
+            bound = bound + 1;
+        }
+    }
+    return bound;
 }
