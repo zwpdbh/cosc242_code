@@ -20,8 +20,8 @@ rbt left_rotate(rbt r) {
     r->right = x->left;
     x->left = r;
     
-    x->colour = r->colour;
-    r->colour = RED;
+//    x->colour = r->colour;
+//    r->colour = RED;
     
     return x;
 }
@@ -32,18 +32,16 @@ rbt right_rotate(rbt r) {
     r->left = x->right;
     x->right = r;
     
-    x->colour = r->colour;
-    r->colour = RED;
+//    x->colour = r->colour;
+//    r->colour = RED;
 
     return x;
 }
 
 rbt flipColour(rbt r) {
-    
     r->colour = RED;
     r->left->colour = BLACK;
     r->right->colour = BLACK;
-    
     return r;
 }
 
@@ -53,18 +51,63 @@ rbt rbt_new() {
 }
 
 rbt rbt_fix(rbt r) {
-    if (IS_RED(r->right) && IS_BLACK(r->left)) {
-        printf("Rotate Left on: %s\n", r->key);
-        r = left_rotate(r);
-    }
-    if (IS_RED(r->left) && IS_RED(r->left->left)) {
-        printf("Rotate Right on: %s\n", r->key);
-        r = right_rotate(r);
-    }
-    if (IS_RED(r->left) && IS_RED(r->right)) {
-        printf("Flip colour on: %s\n", r->key);
+    if (IS_RED(r->left) && IS_RED(r->left->left) && IS_RED(r->right)) {
         r = flipColour(r);
     }
+    if (IS_RED(r->left) && IS_RED(r->left->left) && IS_BLACK(r->right)) {
+        r = right_rotate(r);
+        r->colour = BLACK;
+        r->left->colour = RED;
+        r->right->colour = RED;
+    }
+    
+    if (IS_RED(r->left) && IS_RED(r->left->right) && IS_RED(r->right)) {
+        r = flipColour(r);
+    }
+    if (IS_RED(r->left) && IS_RED(r->left->right) && IS_BLACK(r->right)) {
+        r->left = left_rotate(r->left);
+        r = right_rotate(r);
+        r->colour = BLACK;
+        r->left->colour = RED;
+        r->right->colour = RED;
+    }
+    
+    if (IS_RED(r->right) && IS_RED(r->right->left) && IS_RED(r->left)) {
+        r = flipColour(r);
+    }
+    if (IS_RED(r->right) && IS_RED(r->right->left) && IS_BLACK(r->left)) {
+        r->right = right_rotate(r->right);
+        r = left_rotate(r);
+        r->colour = BLACK;
+        r->left->colour = RED;
+        r->right->colour = RED;
+    }
+    
+    if (IS_RED(r->right) && IS_RED(r->right->right) && IS_RED(r->left)) {
+        r = flipColour(r);
+    }
+    
+    if (IS_RED(r->right) && IS_RED(r->right->right) && IS_BLACK(r->left)) {
+        r = left_rotate(r);
+        r->colour = BLACK;
+        r->left->colour = RED;
+        r->right->colour = RED;
+    }
+    
+    /**
+     if (IS_RED(r->right) && IS_BLACK(r->left)) {
+     printf("Rotate Left on: %s\n", r->key);
+     r = left_rotate(r);
+     }
+     if (IS_RED(r->left) && IS_RED(r->left->left)) {
+     printf("Rotate Right on: %s\n", r->key);
+     r = right_rotate(r);
+     }
+     if (IS_RED(r->left) && IS_RED(r->right)) {
+     printf("Flip colour on: %s\n", r->key);
+     r = flipColour(r);
+     }
+     */
     
     return r;
 }

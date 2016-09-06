@@ -19,7 +19,7 @@ int main(void) {
     while (count > 0) {
         rbt r =  rbt_new();
         
-        if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/lab16_RBT/lab16_RBT/test_lecture.txt", "r"))) {
+        if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/lab16_RBT/lab16_RBT/test_lab.txt", "r"))) {
             fprintf(stderr, "can’t find file\n");
             return EXIT_FAILURE;
         }
