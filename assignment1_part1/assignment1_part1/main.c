@@ -1,15 +1,36 @@
-//
-//  main.c
-//  assignment1_part1
-//
-//  Created by zwpdbh on 9/6/16.
-//  Copyright © 2016 Otago. All rights reserved.
-//
-
 #include <stdio.h>
+#include "getopt.h"
+#include "htable.h"
+#include "mylib.h"
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
-    return 0;
+
+static void print_info(int freq, char *word) {
+    printf("%-4d %s\n", freq, word);
+}
+
+int main(int argc, char *argv[]) {
+    const char *optstring = "";
+    char option;
+    while ((option = getopt(argc, argv, optstring)) != EOF) {
+        printf("the option is: %c\n", option);
+        switch (option) {
+            case 'a':
+                printf("get option -a\n");
+                break;
+            case 'b':
+                /* the argument after the -b is available
+                 in the global variable 'optarg' */
+                printf("get option -b with argument: %s\n", optarg);
+                break;
+            case 'c':
+                printf("get option -c\n");
+                break;
+            default:
+                printf("exit programm\n");
+                break;
+        }
+        
+    }
+    printf("use real default\n");
+    
 }
