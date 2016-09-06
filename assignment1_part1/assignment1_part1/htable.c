@@ -17,7 +17,7 @@ struct htablerec {
 };
 
 
-htable htable_new(int capacity) {
+htable htable_new(int capacity, hashing_t method) {
     int i;
     
     htable table = emalloc(sizeof(*table));
@@ -25,6 +25,7 @@ htable htable_new(int capacity) {
     table->num_keys = 0;
     table->freqs = emalloc(table->capacity * sizeof(table->freqs[0]));
     table->keys = emalloc(table->capacity * sizeof(table->keys[0]));
+    table->method = method;
     
     for (i = 0; i < table->capacity; i++) {
         table->freqs[i] = 0;
@@ -76,7 +77,12 @@ int htable_insert(htable h, char *str) {
                 h->freqs[index]++;
                 return h->freqs[index];
             }
-            index = (index + count * step) % h->capacity;
+            if (h->method == DOUBLE_H) {
+                index = (index + count * step) % h->capacity;
+            } else {
+                index = (index + 1) % h->capacity;
+            }
+            
             count++;
         }
         return 0;
@@ -101,7 +107,12 @@ int htable_search(htable h, char *str) {
     int step = htable_step(h, htable_word_to_int(str));
     
     while (h->keys[searchIndex] != NULL && strcmp(str, h->keys[searchIndex]) != 0 && collision <= h->capacity) {
-        searchIndex = (searchIndex + collision * step ) % h->capacity;
+        if (h->method == DOUBLE_H) {
+            searchIndex = (searchIndex + collision * step ) % h->capacity;
+        } else {
+            searchIndex = (searchIndex + 1 ) % h->capacity;
+        }
+        
         collision++;
     }
     
