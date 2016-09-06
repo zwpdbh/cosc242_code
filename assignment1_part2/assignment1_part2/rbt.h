@@ -15,10 +15,6 @@ extern rbt rbt_new(tree_t type);
 extern void rbt_preorder(rbt r, void f(char *str));
 extern int rbt_search(rbt r, char *key);
 
-static rbt right_rotate(rbt r);
-static rbt left_rotate(rbt r);
-static rbt flipColour(rbt r);
-extern rbt setColourBlack(rbt r);
-static rbt rbt_fix(rbt r);
+extern rbt setColourBlack(rbt);
 
 #endif /* rbt_h */

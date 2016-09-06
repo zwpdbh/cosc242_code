@@ -10,7 +10,34 @@ void print_key(char *s) {
     printf("%s\n", s);
 }
 
+int main(int argc, char *argv[]) {
+    const char *optstring = "ab:c";
+    char option;
+    while ((option = getopt(argc, argv, optstring)) != EOF) {
+        printf("the option is: %c\n", option);
+        switch (option) {
+            case 'a':
+                printf("get option -a\n");
+                break;
+            case 'b':
+                /* the argument after the -b is available
+                 in the global variable 'optarg' */
+                printf("get option -b with argument: %s\n", optarg);
+                break;
+            case 'c':
+                printf("get option -c\n");
+                break;
+            default:
+                printf("exit programm\n");
+                break;
+        }
+    }
+    printf("use real default\n");
+    
+}
 
+
+/**
 int main(void) {
     char word[256];
     char op;
@@ -18,11 +45,12 @@ int main(void) {
     static tree_t type = RBT;
     
     int count = 1;
+
     while (1) {
         rbt r =  rbt_new(type);
         
         if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/lab16_RBT/lab16_RBT/test_lab.txt", "r"))) {
-            fprintf(stderr, "can’t find file\n");
+            fprintf(stderr, "can't find file\n");
             return EXIT_FAILURE;
         }
         
@@ -45,3 +73,4 @@ int main(void) {
     
     return EXIT_SUCCESS;
 }
+ */
