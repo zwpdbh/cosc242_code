@@ -3,6 +3,7 @@
 #include "rbt.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "getopt.h"
 
 
 void print_key(char *s) {
