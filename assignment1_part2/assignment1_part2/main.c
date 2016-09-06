@@ -33,10 +33,6 @@ int main(void) {
                 rbt_preorder(r, print_key);
             } else if ('?' == op) {
                 printf("%d %s\n", rbt_search(r, word), word);
-            } else if ('-' == op){
-                r =  rbt_delete(r, word);
-                printf("After delete %s, the rbt is:\n", word);
-                rbt_preorder(r, print_key);
             }
         }
         

@@ -8,7 +8,6 @@ typedef enum { RED, BLACK } rbt_colour;
 typedef enum tree_e { BST, RBT } tree_t;
 
 
-extern rbt rbt_delete(rbt r, char *str);
 extern rbt rbt_free(rbt r);
 extern void rbt_inorder(rbt r, void f(char *str));
 extern rbt rbt_insert(rbt r, char *str);

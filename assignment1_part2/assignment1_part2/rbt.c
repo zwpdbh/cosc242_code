@@ -117,7 +117,9 @@ rbt rbt_insert(rbt r, char *str) {
         r->right = rbt_insert(r->right, str);
     }
     
-    r = rbt_fix(r);
+    if (r->tree_type == RBT) {
+        r = rbt_fix(r);
+    }
     
     return r;
 }
@@ -167,55 +169,6 @@ void rbt_preorder(rbt r, void f(char *str)) {
     }
     if (r->right != NULL) {
         rbt_preorder(r->right, f);
-    }
-}
-
-rbt rbt_delete(rbt r, char *str) {
-    if (r == NULL) {
-        return r;
-    }
-    if (strcmp(r->key, str) > 0) {
-        r->left = rbt_delete(r->left, str);
-        return r;
-    } else if (strcmp(r->key, str) < 0) {
-        r->right = rbt_delete(r->right, str);
-        return r;
-    } else {
-        /**
-         This is the case where find the key, and need to delete the node.
-         */
-        if (r->left == NULL && r->right == NULL) {
-            free(r->key);
-            free(r);
-            r = NULL;
-            return r;
-        } else if (r->left == NULL && r->right != NULL) {
-            free(r->key);
-            free(r);
-            r = r->right;
-            return r;
-        } else if (r->right == NULL && r->left != NULL) {
-            free(r->key);
-            free(r);
-            r = r->left;
-            return r;
-        } else {
-            rbt left_most;
-            char word[256];
-            rbt rightSubTree = r->right;
-            while (rightSubTree->left != NULL) {
-                rightSubTree = rightSubTree->left;
-            }
-            left_most = rightSubTree;
-            
-            strcpy(word, left_most->key);
-            left_most->key = remalloc(left_most->key, strlen(r->key));
-            strcpy(left_most->key, r->key);
-            strcpy(r->key, word);
-            
-            r->right = rbt_delete(r->right, str);
-            return r;
-        }
     }
 }
 
