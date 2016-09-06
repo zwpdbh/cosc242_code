@@ -10,8 +10,10 @@
 struct htablerec {
     int capacity;
     int num_keys;
-    char **items;
-    int *frequencies;
+    char **keys;
+    int *freqs;
+    int *stats;
+    hashing_t method;
 };
 
 
@@ -21,12 +23,12 @@ htable htable_new(int capacity) {
     htable table = emalloc(sizeof(*table));
     table->capacity = capacity;
     table->num_keys = 0;
-    table->frequencies = emalloc(table->capacity * sizeof(table->frequencies[0]));
-    table->items = emalloc(table->capacity * sizeof(table->items[0]));
+    table->freqs = emalloc(table->capacity * sizeof(table->freqs[0]));
+    table->keys = emalloc(table->capacity * sizeof(table->keys[0]));
     
     for (i = 0; i < table->capacity; i++) {
-        table->frequencies[i] = 0;
-        table->items[i] = NULL;
+        table->freqs[i] = 0;
+        table->keys[i] = NULL;
     }
     
     return table;
@@ -36,10 +38,10 @@ htable htable_new(int capacity) {
 void htable_free(htable h) {
     int i;
     for (i = 0; i < h->capacity; i++) {
-        free(h->items[i]);
+        free(h->keys[i]);
     }
-    free(h->frequencies);
-    free(h->items);
+    free(h->freqs);
+    free(h->keys);
     free(h);
 }
 
@@ -49,30 +51,30 @@ int htable_insert(htable h, char *str) {
     unsigned int wordIndex = wordInteger % h->capacity;
     unsigned int step = htable_step(h, wordInteger);
     
-    if (h->frequencies[wordIndex] == 0) {
-        h->items[wordIndex] = remalloc(h->items[wordIndex],
-                                      (strlen(str) + 1) * sizeof(h->items[0][0]));
-        strcpy(h->items[wordIndex], str);
-        h->frequencies[wordIndex] = 1;
+    if (h->freqs[wordIndex] == 0) {
+        h->keys[wordIndex] = remalloc(h->keys[wordIndex],
+                                      (strlen(str) + 1) * sizeof(h->keys[0][0]));
+        strcpy(h->keys[wordIndex], str);
+        h->freqs[wordIndex] = 1;
         h->num_keys++;
         return 1;
-    } else if (strcmp(str, h->items[wordIndex]) == 0) {
-        h->frequencies[wordIndex] = h->frequencies[wordIndex] + 1;
-        return h->frequencies[wordIndex];
-    } else if (strcmp(str, h->items[wordIndex]) != 0){
+    } else if (strcmp(str, h->keys[wordIndex]) == 0) {
+        h->freqs[wordIndex] = h->freqs[wordIndex] + 1;
+        return h->freqs[wordIndex];
+    } else if (strcmp(str, h->keys[wordIndex]) != 0){
         int count = 0;
         unsigned int index = wordIndex;
         while (count != h->capacity) {
-            if (h->frequencies[index] == 0) {
-                h->items[index] = remalloc(h->items[index],
-                                               (strlen(str) + 1) * sizeof(h->items[0][0]));
-                strcpy(h->items[index], str);
-                h->frequencies[index] = 1;
+            if (h->freqs[index] == 0) {
+                h->keys[index] = remalloc(h->keys[index],
+                                               (strlen(str) + 1) * sizeof(h->keys[0][0]));
+                strcpy(h->keys[index], str);
+                h->freqs[index] = 1;
                 h->num_keys++;
                 return 1;
-            } else if (strcmp(str, h->items[wordIndex]) == 0) {
-                h->frequencies[index]++;
-                return h->frequencies[index];
+            } else if (strcmp(str, h->keys[wordIndex]) == 0) {
+                h->freqs[index]++;
+                return h->freqs[index];
             }
             index = (index + count * step) % h->capacity;
             count++;
@@ -86,8 +88,8 @@ int htable_insert(htable h, char *str) {
 void htable_print(htable h, FILE *stream) {
     int i;
     for (i = 0 ; i < h->capacity; i++) {
-        if (h->frequencies[i] != 0) {
-            fprintf(stream, "Index:%d -> %s, Frequencies: %d\n", i, h->items[i], h->frequencies[i]);
+        if (h->freqs[i] != 0) {
+            fprintf(stream, "Index:%d -> %s, freqs: %d\n", i, h->keys[i], h->freqs[i]);
         }
     }
 }
@@ -98,7 +100,7 @@ int htable_search(htable h, char *str) {
     int searchIndex = htable_word_to_int(str) % h->capacity;
     int step = htable_step(h, htable_word_to_int(str));
     
-    while (h->items[searchIndex] != NULL && strcmp(str, h->items[searchIndex]) != 0 && collision <= h->capacity) {
+    while (h->keys[searchIndex] != NULL && strcmp(str, h->keys[searchIndex]) != 0 && collision <= h->capacity) {
         searchIndex = (searchIndex + collision * step ) % h->capacity;
         collision++;
     }
@@ -106,7 +108,7 @@ int htable_search(htable h, char *str) {
     if (collision == h->capacity) {
         return 0;
     } else {
-        return h->frequencies[searchIndex];
+        return h->freqs[searchIndex];
     }
 }
 
