@@ -4,73 +4,122 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "getopt.h"
+#include <time.h>
 
 
-void print_key(char *s) {
-    printf("%s\n", s);
+static void print_info(int freq, char *word) {
+    printf("%-4d %s\n", freq, word);
 }
 
 int main(int argc, char *argv[]) {
-    const char *optstring = "ab:c";
+    const char *optstring = "c:dpf:orh";
     char option;
+    char word[256];
+    int unknowWords = 0;
+    
+    int withC = 0;
+    char *fileToBeChecked = NULL;
+    int withD = 0;
+    int withP = 0;
+    int withF = 0;
+    int withO = 0;
+    char *outPutFileName = NULL;
+    tree_t tree_type = BST;
+    
+    clock_t start, end;
+    float fillTime;
+    float searchTime;
+    FILE *infile;
+    
     while ((option = getopt(argc, argv, optstring)) != EOF) {
-        printf("the option is: %c\n", option);
         switch (option) {
-            case 'a':
-                printf("get option -a\n");
-                break;
-            case 'b':
-                /* the argument after the -b is available
-                 in the global variable 'optarg' */
-                printf("get option -b with argument: %s\n", optarg);
-                break;
             case 'c':
-                printf("get option -c\n");
+                withC = 1;
+                fileToBeChecked = optarg;
+                break;
+            case 'd':
+                withD = 1;
+                withP = 0;
+                break;
+            case 'p':
+                withP = 1;
+                withD = 0;
+            case 'f':
+                withF = 1;
+                break;
+            case 'o':
+                withO = 1;
+                outPutFileName = optarg;
+                break;
+            case 'r':
+                tree_type = RBT;
+                break;
+            case 'h':
+                printf("should print out the help message");
                 break;
             default:
-                printf("exit programm\n");
-                break;
+                printf("should use -h to print out help message");
+                EXIT_SUCCESS;
         }
     }
-    printf("use real default\n");
     
-}
-
-
-/**
-int main(void) {
-    char word[256];
-    char op;
-    FILE *infile;
-    static tree_t type = RBT;
+    tree r = tree_new(tree_type);
     
-    int count = 1;
-
-    while (1) {
-        rbt r =  rbt_new(type);
-        
-        if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/lab16_RBT/lab16_RBT/test_lab.txt", "r"))) {
-            fprintf(stderr, "can't find file\n");
+    start = clock();
+    
+    while (getword(word, sizeof word, stdin) != EOF) {
+        r = tree_insert(r, word);
+        r = setColourBlack(r);
+    }
+    
+    end = clock();
+    fillTime = (end-start)/(double)CLOCKS_PER_SEC;
+    
+    if (withD == 1) {
+        printf("%d\n", tree_depth(r));
+        EXIT_SUCCESS;
+    } else if (withC == 1) {
+        /**
+         -c fileToBeChecked
+         */
+        if (NULL == (infile = fopen(fileToBeChecked, "r"))) {
+            fprintf(stderr, "can’t find file\n");
             return EXIT_FAILURE;
         }
-        
-        while (2 == fscanf(infile, " %c %255s", &op, word)) {
-            if ('+' == op) {
-                printf("\nInsert %s: \n", word);
-                r = rbt_insert(r, word);
-                r = setColourBlack(r);
-                rbt_preorder(r, print_key);
-            } else if ('?' == op) {
-                printf("%d %s\n", rbt_search(r, word), word);
+        start = clock();
+        while (getword(word, sizeof word, infile) != EOF) {
+            if (tree_search(r, word)) {
+                printf("%s\n", word);
+                unknowWords += 1;
             }
         }
-        
-        
-        rbt_free(r);
+        end = clock();
+        searchTime = (end-start)/(double)CLOCKS_PER_SEC;
+        printf("Fill time\t:%f\n", fillTime);
+        printf("Search time\t:%f\n", searchTime);
+        printf("Unknown words = %d\n", unknowWords);
         fclose(infile);
-        count = count - 1;
+        
+        return EXIT_SUCCESS;
+    } else if (withP == 1) {
+        printf("?");
+    } else if (withO == 1 && withF ==0) {
+        if (NULL == (infile = fopen("output-dot.txt", "r"))) {
+            fprintf(stderr, "can’t find file\n");
+            return EXIT_FAILURE;
+        }
+        tree_output_dot(r, infile);
+        fclose(infile);
+    } else if (withO == 1 && withF == 1) {
+        if (NULL == (infile = fopen(outPutFileName, "r"))) {
+            fprintf(stderr, "can’t find file\n");
+            return EXIT_FAILURE;
+        }
+        tree_output_dot(r, infile);
+        fclose(infile);
+    } else {
+        tree_preorder(r, print_info);
     }
     
-    return EXIT_SUCCESS;
 }
- */
+

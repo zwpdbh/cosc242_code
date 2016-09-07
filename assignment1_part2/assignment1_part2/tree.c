@@ -12,6 +12,7 @@ struct tree_node {
     tree right;
     tree_colour colour;
     tree_t tree_type;
+    int frequency;
 };
 
 
@@ -47,6 +48,7 @@ tree tree_new(tree_t type) {
     r->right = NULL;
     r->tree_type = type;
     r->colour = RED;
+    r->frequency = 0;
     
     return r;
 }
@@ -115,6 +117,8 @@ tree tree_insert(tree r, char *str) {
         r->left = tree_insert(r->left, str);
     } else if (cmp > 0) {
         r->right = tree_insert(r->right, str);
+    } else if (cmp == 0) {
+        r->frequency += 1;
     }
     
     if (r->tree_type == RBT) {
@@ -124,6 +128,10 @@ tree tree_insert(tree r, char *str) {
     return r;
 }
 
+/**
+ return 0 if not found
+ return 1 if found
+ */
 int tree_search(tree r, char *str) {
     if (r == NULL) {
         return 0;
@@ -152,17 +160,12 @@ void tree_inorder(tree r, void f(char *str)) {
     }
 }
 
-void tree_preorder(tree r, void f(char *str)) {
+void tree_preorder(tree r, void f(int freq, char *str)) {
     if (r == NULL) {
         return;
     }
     if (r->key != NULL) {
-        if (IS_RED(r)) {
-            printf("red:\t");
-        } else if (IS_BLACK(r)) {
-            printf("black:\t");
-        }
-        f(r->key);
+        f(r->frequency, r->key);
     }
     if (r->left != NULL) {
         tree_preorder(r->left, f);
@@ -199,3 +202,76 @@ tree setColourBlack(tree r) {
     r->colour = BLACK;
     return r;
 }
+
+int tree_depth(tree r) {
+    int leftD;
+    int rightD;
+    int depth = 0;
+    if (r == NULL) {
+        return depth;
+    }
+    
+    if (r->left == NULL) {
+        leftD = 0;
+    } else {
+        leftD = tree_depth(r->left);
+    }
+    
+    if (r->right == NULL) {
+        rightD = 0;
+    } else {
+        rightD = tree_depth(r->right);
+    }
+    
+    if (rightD > leftD) {
+        return 1 + rightD;
+    } else {
+        return 1 + leftD;
+    }
+}
+
+/* These functions should be added to your tree.c file */
+
+/**
+ * Traverses the tree writing a DOT description about connections, and
+ * possibly colours, to the given output stream.
+ *
+ * @param t the tree to output a DOT description of.
+ * @param out the stream to write the DOT output to.
+ */
+static void tree_output_dot_aux(tree t, FILE *out) {
+    if(t->key != NULL) {
+        fprintf(out, "\"%s\"[label=\"{<f0>%s:%d|{<f1>|<f2>}}\"color=%s];\n",
+                t->key, t->key, t->frequency,
+                (RBT == t->tree_type && RED == t->colour) ? "red":"black");
+    }
+    if(t->left != NULL) {
+        tree_output_dot_aux(t->left, out);
+        fprintf(out, "\"%s\":f1 -> \"%s\":f0;\n", t->key, t->left->key);
+    }
+    if(t->right != NULL) {
+        tree_output_dot_aux(t->right, out);
+        fprintf(out, "\"%s\":f2 -> \"%s\":f0;\n", t->key, t->right->key);
+    }
+}
+
+/**
+ * Output a DOT description of this tree to the given output stream.
+ * DOT is a plain text graph description language (see www.graphviz.org).
+ * You can create a viewable graph with the command
+ *
+ *    dot -Tpdf < graphfile.dot > graphfile.pdf
+ *
+ * You can also use png, ps, jpg, svg... instead of pdf
+ *
+ * @param t the tree to output the DOT description of.
+ * @param out the stream to write the DOT description to.
+ */
+void tree_output_dot(tree t, FILE *out) {
+    fprintf(out, "digraph tree {\nnode [shape = Mrecord, penwidth = 2];\n");
+    tree_output_dot_aux(t, out);
+    fprintf(out, "}\n");
+}
+
+
+

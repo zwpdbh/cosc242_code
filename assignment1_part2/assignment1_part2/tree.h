@@ -12,9 +12,10 @@ extern tree tree_free(tree r);
 extern void tree_inorder(tree r, void f(char *str));
 extern tree tree_insert(tree r, char *str);
 extern tree tree_new(tree_t type);
-extern void tree_preorder(tree r, void f(char *str));
+extern void tree_preorder(tree r, void f(int freq, char *str));
 extern int tree_search(tree r, char *key);
-
+extern int tree_depth(tree r);
 extern tree setColourBlack(tree);
+extern void tree_output_dot(tree t, FILE *out);
 
 #endif /* tree_h */
