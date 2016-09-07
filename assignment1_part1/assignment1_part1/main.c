@@ -3,6 +3,7 @@
 #include "getopt.h"
 #include "htable.h"
 #include "mylib.h"
+#include <time.h>
 
 
 static void print_info(int freq, char *word) {
@@ -12,36 +13,66 @@ static void print_info(int freq, char *word) {
 int main(int argc, char *argv[]) {
     const char *optstring = "hc:deps:t:";
     char option;
-    
+    char word[256];
     int capacity = 113;
     hashing_t method = LINEAR_P;
+    FILE *infile;
+    clock_t start, end;
+    float fillTime;
+    float searchTime;
+    int unknowWords = 0;
+    int numOfKeys = 0;
     
-    htable h;
-    
+    htable h = htable_new(capacity, method);
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         printf("the option is: %c\n", option);
         switch (option) {
-            case 'd':
-                /**
-                 -d use double hashing
-                 */
-                printf("get option -d\n");
-                method = DOUBLE_H;
             case 't':
                 /**
                  Use the first prime >= tablesize as the size of your hash table.
                  You can assume that tablesize will be a number greater than 0.
                  */
                 capacity = primegt(atoi(optarg));
-                h = htable_new(capacity, method);
+            case 'd':
+                /**
+                 -d use double hashing
+                 */
+                printf("get option -d\n");
+                method = DOUBLE_H;
             case 'c':
+                printf("get option -c with argument: %s\n", optarg);
+                htable_free(h);
+                h = htable_new(capacity, method);
+                start = clock();
+                while (getword(word, sizeof word, stdin) != EOF) {
+                    htable_insert(h, word);
+                }
+                end = clock();
+                fillTime = (end-start)/(double)CLOCKS_PER_SEC;
+                
+
+                if (NULL == (infile = fopen(optarg, "r"))) {
+                    fprintf(stderr, "can’t find file\n");
+                    return EXIT_FAILURE;
+                }
                 /** -c filename
                  Check the spelling of words in filename using words read from 
                  stdin as the dictionary. Print all unknown words to stdout.
                  Print timing information and unknown word count to stderr.
                  When this option is given then the -p option should be ignored.
                  */
-                printf("get option -c with argument: %s\n", optarg);
+                start = clock();
+                while (getword(word, sizeof word, infile) != EOF) {
+                    if (htable_search(h, word) == 0) {
+                        printf("%s\n", word);
+                        unknowWords += 1;
+                    }
+                }
+                end = clock();
+                searchTime = (end-start)/(double)CLOCKS_PER_SEC;
+                printf("Fill time\t:%f", fillTime);
+                printf("Search time\t:%f", searchTime);
+                printf("Unknown words = %d", unknowWords);
                 break;
             case 'e':
                 /**
@@ -52,12 +83,7 @@ int main(int argc, char *argv[]) {
                  so you can see how many there are).
                  */
                 printf("get opetion -e\n");
-                break;
-            case 'p':
-                /**
-                 Print stats info using the functions provided in print-stats
-                 instead of printing the frequencies and words
-                 */
+                htable_content(h, stderr);
                 break;
             case 's':
                 /**
@@ -66,14 +92,26 @@ int main(int argc, char *argv[]) {
                  snapshots will be displayed. 
                  Snapshots with 0 entries are not shown.
                  */
+                numOfKeys = atoi(optarg);
+                break;
+            case 'p':
+                /**
+                 Print stats info using the functions provided in print-stats
+                 instead of printing the frequencies and words
+                 */
+                if (getNumberOfKeys(h) > 0 && numOfKeys != 0) {
+                    htable_print_stats(h, stdout, numOfKeys);
+                } else {
+                    htable_print_stats(h, stdout, getNumberOfKeys(h));
+                }
                 break;
             case 'h':
                 /**print out usage*/
                 printf("get option -h\n");
                 break;
             default:
-                printf("exit programm\n");
-                break;
+                printf("can not get corrent option, exit programm\n");
+                return EXIT_FAILURE;
         }
         
     }
@@ -81,6 +119,6 @@ int main(int argc, char *argv[]) {
      By default, words are read from stdin and added to your data structure 
      before being printed out alongside their frequencies to stdout.
      */
-    printf("use real default\n");
-    
+    htable_print(h, print_info);
+    return EXIT_SUCCESS;
 }

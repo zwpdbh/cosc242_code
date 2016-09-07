@@ -63,6 +63,8 @@ int htable_insert(htable h, char *str) {
         strcpy(h->keys[wordIndex], str);
         h->freqs[wordIndex] = 1;
         h->num_keys++;
+        h->stats[h->num_keys - 1] = 0;
+        
         return 1;
     } else if (strcmp(str, h->keys[wordIndex]) == 0) {
         h->freqs[wordIndex] = h->freqs[wordIndex] + 1;
@@ -82,13 +84,14 @@ int htable_insert(htable h, char *str) {
                 h->freqs[index]++;
                 return h->freqs[index];
             }
+            
             if (h->method == DOUBLE_H) {
                 index = (index + count * step) % h->capacity;
             } else {
                 index = (index + 1) % h->capacity;
             }
-            
             count++;
+            h->stats[h->num_keys - 1] = count;
         }
         return 0;
     }
@@ -105,6 +108,18 @@ void htable_print(htable h, void f(int freq, char *word)) {
     }
 }
 
+void htable_content(htable h, FILE *stream) {
+    int i;
+    for (i = 0; i < h->capacity; i++) {
+        if (h->freqs[i] != 0) {
+            fprintf(stream, "%5d %5d %5d   %s\n",
+                    i, h->freqs[i], h->stats[i], h->keys[i]);
+        } else {
+            fprintf(stream, "%5d %5d %5d   %s\n",
+                    i, h->freqs[i], h->stats[i], "");
+        }
+    }
+}
 
 int htable_search(htable h, char *str) {
     int collision = 0;
@@ -128,6 +143,9 @@ int htable_search(htable h, char *str) {
     }
 }
 
+int getNumberOfKeys(htable h) {
+    return h->num_keys;
+}
 
 
 /* These functions should be added to your htable.c file */
