@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "merge_sort.h"
-#include "quicksort.h"
+
 #include <time.h>
 
 struct flexarrayrec {

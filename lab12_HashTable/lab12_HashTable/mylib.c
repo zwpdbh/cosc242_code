@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
-
+#include <string.h>
 void *emalloc(size_t s) {
     void *result = malloc(s);
     if (result == NULL) {
@@ -24,9 +24,11 @@ void *remalloc(void *p, size_t s) {
 
 unsigned int htable_word_to_int(char *word) {
     unsigned int result = 0;
+
     while (*word != '\0') {
         result = (*word++ + 31 * result);
     }
+
     return result;
 }
 
