@@ -11,99 +11,53 @@ static void print_info(int freq, char *word) {
 }
 
 int main(int argc, char *argv[]) {
-    const char *optstring = "hc:deps:t:";
+    const char *optstring = "ht:c:deps:";
     char option;
     char word[256];
     int capacity = 113;
-    hashing_t method = LINEAR_P;
-    FILE *infile;
+    
+    FILE *infile = NULL;
     clock_t start, end;
+    
+    hashing_t method = LINEAR_P;
+    
     float fillTime;
     float searchTime;
+    
     int unknowWords = 0;
     int numOfKeys = 0;
     
-    htable h = htable_new(capacity, method);
+    htable  h;
+    char *fileToBeChecked = NULL;
+    int displayContentOfHashTable = 0;
+    int withP = 0;
+    int withS = 0;
+    
     while ((option = getopt(argc, argv, optstring)) != EOF) {
-        printf("the option is: %c\n", option);
         switch (option) {
             case 't':
-                /**
-                 Use the first prime >= tablesize as the size of your hash table.
-                 You can assume that tablesize will be a number greater than 0.
-                 */
+                printf("get option -t with argument: %s\n", optarg);
                 capacity = primegt(atoi(optarg));
+                break;
             case 'd':
-                /**
-                 -d use double hashing
-                 */
-                printf("get option -d\n");
+                printf("get option -d: using DOUBLE HASHING\n");
                 method = DOUBLE_H;
+                break;
             case 'c':
                 printf("get option -c with argument: %s\n", optarg);
-                htable_free(h);
-                h = htable_new(capacity, method);
-                start = clock();
-                while (getword(word, sizeof word, stdin) != EOF) {
-                    htable_insert(h, word);
-                }
-                end = clock();
-                fillTime = (end-start)/(double)CLOCKS_PER_SEC;
-                
-
-                if (NULL == (infile = fopen(optarg, "r"))) {
-                    fprintf(stderr, "can’t find file\n");
-                    return EXIT_FAILURE;
-                }
-                /** -c filename
-                 Check the spelling of words in filename using words read from 
-                 stdin as the dictionary. Print all unknown words to stdout.
-                 Print timing information and unknown word count to stderr.
-                 When this option is given then the -p option should be ignored.
-                 */
-                start = clock();
-                while (getword(word, sizeof word, infile) != EOF) {
-                    if (htable_search(h, word) == 0) {
-                        printf("%s\n", word);
-                        unknowWords += 1;
-                    }
-                }
-                end = clock();
-                searchTime = (end-start)/(double)CLOCKS_PER_SEC;
-                printf("Fill time\t:%f", fillTime);
-                printf("Search time\t:%f", searchTime);
-                printf("Unknown words = %d", unknowWords);
+                fileToBeChecked = optarg;
                 break;
             case 'e':
-                /**
-                 Display entire contents of hash table on stderr using the 
-                 format string "%5d %5d %5d   %s\n" to display the index, 
-                 frequency, stats, and the key if it exists. 
-                 (Note that spaces have been made visible in the format string 
-                 so you can see how many there are).
-                 */
                 printf("get opetion -e\n");
-                htable_content(h, stderr);
+                displayContentOfHashTable = 1;
                 break;
             case 's':
-                /**
-                 Display up to the given number of stats snapshots when given 
-                 -p as an argument. If the table is not full then fewer 
-                 snapshots will be displayed. 
-                 Snapshots with 0 entries are not shown.
-                 */
+                printf("get option -s with argument: %s\n", optarg);
                 numOfKeys = atoi(optarg);
+                withS = 1;
                 break;
             case 'p':
-                /**
-                 Print stats info using the functions provided in print-stats
-                 instead of printing the frequencies and words
-                 */
-                if (getNumberOfKeys(h) > 0 && numOfKeys != 0) {
-                    htable_print_stats(h, stdout, numOfKeys);
-                } else {
-                    htable_print_stats(h, stdout, getNumberOfKeys(h));
-                }
+                withP = 1;
                 break;
             case 'h':
                 /**print out usage*/
@@ -115,10 +69,50 @@ int main(int argc, char *argv[]) {
         }
         
     }
+    
+    
+    h = htable_new(capacity, method);
+    start = clock();
+    while (getword(word, sizeof word, stdin) != EOF) {
+        htable_insert(h, word);
+    }
+    end = clock();
+    fillTime = (end-start)/(double)CLOCKS_PER_SEC;
+    
     /**
-     By default, words are read from stdin and added to your data structure 
-     before being printed out alongside their frequencies to stdout.
+     if -c
      */
-    htable_print(h, print_info);
+    if (fileToBeChecked != NULL) {
+        if (NULL == (infile = fopen(fileToBeChecked, "r"))) {
+            fprintf(stderr, "can’t find file\n");
+            return EXIT_FAILURE;
+        }
+        start = clock();
+        while (getword(word, sizeof word, infile) != EOF) {
+            if (htable_search(h, word) == 0) {
+                printf("%s\n", word);
+                unknowWords += 1;
+            }
+        }
+        end = clock();
+        searchTime = (end-start)/(double)CLOCKS_PER_SEC;
+        printf("Fill time\t:%f", fillTime);
+        printf("Search time\t:%f", searchTime);
+        printf("Unknown words = %d", unknowWords);
+    }
+    
+    
+    if (withP == 0) {
+        htable_print(h, print_info);
+    } else if (withP !=0 && withS == 0) {
+        htable_print_stats(h, stdout, getNumberOfKeys(h));
+    } else if (withP != 0 && withS != 0) {
+        htable_print_stats(h, stdout, numOfKeys);
+    }
+    
+    fclose(infile);
+    free(h);
+    
     return EXIT_SUCCESS;
 }
+

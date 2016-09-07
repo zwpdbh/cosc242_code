@@ -25,6 +25,7 @@ htable htable_new(int capacity, hashing_t method) {
     table->num_keys = 0;
     table->freqs = emalloc(table->capacity * sizeof(table->freqs[0]));
     table->keys = emalloc(table->capacity * sizeof(table->keys[0]));
+    table->stats = emalloc(table->capacity * sizeof(table->stats[0]));
     table->method = method;
     
     for (i = 0; i < table->capacity; i++) {
@@ -43,6 +44,7 @@ void htable_free(htable h) {
     }
     free(h->freqs);
     free(h->keys);
+    free(h->stats);
     free(h);
 }
 
@@ -51,7 +53,11 @@ static unsigned int htable_step(htable h, unsigned int i_key) {
     return 1 + (i_key % (h->capacity - 1));
 }
 
-
+/**
+ return 0 means insert failed
+ return 1 means insert succeed at the fisrt time
+ return >1 means the frequencies the word has been inserted
+ */
 int htable_insert(htable h, char *str) {
     unsigned int wordInteger = htable_word_to_int(str);
     unsigned int wordIndex = wordInteger % h->capacity;

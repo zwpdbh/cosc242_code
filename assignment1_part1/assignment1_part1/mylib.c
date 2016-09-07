@@ -70,10 +70,11 @@ extern int primegt(int n) {
     int bound = n + 1;
     while (bound > 0) {
         if (factor(bound)) {
-            printf("The next prime greater than %d is: %d\n", n, bound);
+            break;
         } else {
             bound = bound + 1;
         }
     }
     return bound;
 }
+
