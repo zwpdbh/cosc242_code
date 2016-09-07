@@ -20,7 +20,6 @@ static unsigned int htable_step(htable h, unsigned int i_key);
 extern void     htable_print_entire_table(htable h);
 extern void     htable_print_stats(htable h, FILE *stream, int num_stats);
 extern void     htable_content(htable h, FILE *stream);
-extern int      getNumberOfKeys(htable h);
 /**
 static void     print_stats_line(htable h, FILE *stream, int percent_full);
  */

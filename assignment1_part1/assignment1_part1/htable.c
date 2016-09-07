@@ -28,6 +28,7 @@ htable htable_new(int capacity, hashing_t method) {
     for (i = 0; i < table->capacity; i++) {
         table->freqs[i] = 0;
         table->keys[i] = NULL;
+        table->stats[i] = 0;
     }
     
     return table;
@@ -77,12 +78,13 @@ int htable_insert(htable h, char *str) {
             if (h->method == LINEAR_P) {
                 index += 1;
             } else {
-                index += collision * step;
+                index += step;
             }
             index = index % h->capacity;
             index = (index + 1) % h->capacity;
             collision++;
         }
+        h->stats[h->num_keys - 1] = collision;
         if (h->keys[index] == NULL) {
             h->keys[index] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
             strcpy(h->keys[index], str);
@@ -131,7 +133,7 @@ int htable_search(htable h, char *str) {
     
     while (h->keys[searchIndex] != NULL && strcmp(str, h->keys[searchIndex]) != 0 && collision <= h->capacity) {
         if (h->method == DOUBLE_H) {
-            searchIndex = (searchIndex + collision * step ) % h->capacity;
+            searchIndex = (searchIndex + step ) % h->capacity;
         } else {
             searchIndex = (searchIndex + 1 ) % h->capacity;
         }
@@ -144,10 +146,6 @@ int htable_search(htable h, char *str) {
     } else {
         return h->freqs[searchIndex];
     }
-}
-
-int getNumberOfKeys(htable h) {
-    return h->num_keys;
 }
 
 

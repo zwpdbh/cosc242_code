@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
     
     int unknowWords = 0;
     int numOfSnapshot = 0;
-    int numOfKeys = 0;
     
     htable  h;
     char *fileToBeChecked = NULL;
@@ -81,7 +80,6 @@ int main(int argc, char *argv[]) {
     
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
-    numOfKeys = getNumberOfKeys(h);
     
     /**
      if -c
@@ -111,11 +109,9 @@ int main(int argc, char *argv[]) {
     if (withP == 0) {
         htable_print(h, print_info);
     } else if (withP !=0 && withS == 0) {
-        htable_print_stats(h, stdout, numOfKeys);
-    } else if (withP != 0 && withS != 0 && numOfSnapshot < numOfKeys) {
+        htable_print_stats(h, stdout, 10);
+    } else if (withP != 0 && withS != 0) {
         htable_print_stats(h, stdout, numOfSnapshot);
-    } else if (withP != 0 && withS != 0 && numOfKeys < numOfSnapshot) {
-        htable_print_stats(h, stdout, numOfKeys);
     }
     
     fclose(infile);
