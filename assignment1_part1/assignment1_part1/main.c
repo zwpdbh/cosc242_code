@@ -74,10 +74,15 @@ int main(int argc, char *argv[]) {
     h = htable_new(capacity, method);
     start = clock();
     
-    while (getword(word, sizeof word, stdin) != EOF) {
-        htable_insert(h, word);
+    if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/assignment1_part1/assignment1_part1/dictionary.txt", "r"))) {
+        fprintf(stderr, "can’t find file\n");
+        return EXIT_FAILURE;
     }
     
+    while (getword(word, sizeof word, infile) != EOF) {
+        htable_insert(h, word);
+    }
+    fclose(infile);
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
     
@@ -107,7 +112,8 @@ int main(int argc, char *argv[]) {
     
     
     if (withP == 0) {
-        htable_print(h, print_info);
+        return EXIT_SUCCESS;
+//        htable_print(h, print_info);
     } else if (withP !=0 && withS == 0) {
         htable_print_stats(h, stdout, 10);
     } else if (withP != 0 && withS != 0) {

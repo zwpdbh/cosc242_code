@@ -13,6 +13,13 @@ struct htablerec {
     hashing_t method;
 };
 
+unsigned int htable_word_to_int(char *word) {
+    unsigned int result = 0;
+    while (*word != '\0') {
+        result = (*word++ + 31 * result);
+    }
+    return result;
+}
 
 htable htable_new(int capacity, hashing_t method) {
     int i;
@@ -67,36 +74,48 @@ int htable_insert(htable h, char *str) {
         h->freqs[wordIndex] += 1;
         h->num_keys += 1;
         h->stats[h->num_keys - 1] = 0;
+        
+        printf("\nindex %u is empty, \tplace '%s' at index: %u, \tcollision is %d\n", wordIndex, str, wordIndex ,h->stats[h->num_keys - 1]);
+        
         return 1;
     } else if (strcmp(str, h->keys[wordIndex]) == 0) {
         h->freqs[wordIndex] += 1;
         h->stats[h->num_keys - 1] = 0;
+        
+        printf("\nindex %u is not empty, word '%s' is at %u, \tplace '%s' at index: %u, \tcollision is %d\n", wordIndex, h->keys[wordIndex], wordIndex, str, wordIndex, h->stats[h->num_keys - 1]);
+        
         return h->freqs[wordIndex];
     } else {
+        printf("\nput word '%s' at index %u, but word '%s' is at index %u\n", str, wordIndex, h->keys[wordIndex], wordIndex);
         int collision = 0;
         unsigned int index = wordIndex;
         while (collision <= h->capacity && h->keys[index] != NULL &&
                strcmp(str, h->keys[index]) != 0) {
+            printf("index %u is occupied with '%s', ", index, h->keys[index]);
             if (h->method == LINEAR_P) {
                 index += 1;
             } else {
                 index += step;
             }
             index = index % h->capacity;
-            index = (index + 1) % h->capacity;
+            printf("move to the next index %u\n", index);
             collision++;
         }
         h->stats[h->num_keys - 1] = collision;
+    
         if (h->keys[index] == NULL) {
+            if (h->freqs[index] != 0) {
+                fprintf(stderr, "error, the freqs at index %u is %d\n", index, h->freqs[index]);
+            }
+            printf("index %u is %s, so put word '%s' at index %u, with collision: %d\n", index, h->keys[index], str, index, collision);
             h->keys[index] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
             strcpy(h->keys[index], str);
             h->freqs[index] += 1;
             h->num_keys += 1;
-            if (h->freqs[index] != 1) {
-                fprintf(stderr, "error");
-            }
+
             return 1;
         } else if (strcmp(str, h->keys[index]) == 0) {
+            printf("index %u is %s, so put word '%s' at index %u, with collision: %d\n", index, h->keys[index], str, index, collision);
             h->freqs[index] += 1;
             return h->freqs[index];
         } else {

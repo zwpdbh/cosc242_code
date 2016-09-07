@@ -103,7 +103,7 @@ static tree tree_fix(tree r) {
 tree tree_insert(tree r, char *str) {
     int cmp;
     if (r == NULL) {
-        r = tree_new(r->tree_type);
+        r = tree_new(BST);
     }
     
     if (r->key == NULL) {

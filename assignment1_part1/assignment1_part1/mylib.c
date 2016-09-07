@@ -23,13 +23,6 @@ void *remalloc(void *p, size_t s) {
     return result;
 }
 
-unsigned int htable_word_to_int(char *word) {
-    unsigned int result = 0;
-    while (*word != '\0') {
-        result = (*word++ + 31 * result);
-    }
-    return result;
-}
 
 int getword(char *s, int limit, FILE *stream) {
     int c;
