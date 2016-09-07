@@ -60,45 +60,45 @@ int htable_insert(htable h, char *str) {
     unsigned int wordIndex = wordInteger % h->capacity;
     unsigned int step = htable_step(h, wordInteger);
     
-    if (h->freqs[wordIndex] == 0) {
-        h->keys[wordIndex] = remalloc(h->keys[wordIndex],
-                                      (strlen(str) + 1) * sizeof(h->keys[0][0]));
+    if (h->keys[wordIndex] == NULL) {
+        h->keys[wordIndex] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
         strcpy(h->keys[wordIndex], str);
-        h->freqs[wordIndex] = 1;
-        h->num_keys++;
-        h->stats[h->num_keys - 1] = 0;
-        
+        h->freqs[wordIndex] += 1;
+        h->num_keys += 1;
         return 1;
     } else if (strcmp(str, h->keys[wordIndex]) == 0) {
-        h->freqs[wordIndex] = h->freqs[wordIndex] + 1;
+        h->freqs[wordIndex] += 1;
         return h->freqs[wordIndex];
-    } else if (strcmp(str, h->keys[wordIndex]) != 0){
-        int count = 0;
+    } else {
+        int collision = 1;
         unsigned int index = wordIndex;
-        while (count != h->capacity) {
-            if (h->freqs[index] == 0) {
-                h->keys[index] = remalloc(h->keys[index],
-                                               (strlen(str) + 1) * sizeof(h->keys[0][0]));
-                strcpy(h->keys[index], str);
-                h->freqs[index] = 1;
-                h->num_keys++;
-                return 1;
-            } else if (strcmp(str, h->keys[wordIndex]) == 0) {
-                h->freqs[index]++;
-                return h->freqs[index];
-            }
-            
-            if (h->method == DOUBLE_H) {
-                index = (index + count * step) % h->capacity;
+        while (collision <= h->capacity && h->keys[index] != NULL &&
+               strcmp(str, h->keys[index]) != 0) {
+            if (h->method == LINEAR_P) {
+                index += 1;
             } else {
-                index = (index + 1) % h->capacity;
+                index += collision * step;
             }
-            count++;
-            h->stats[h->num_keys - 1] = count;
+            index = index % h->capacity;
+            index = (index + 1) % h->capacity;
+            collision++;
         }
-        return 0;
+        if (h->keys[index] == NULL) {
+            h->keys[index] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
+            strcpy(h->keys[index], str);
+            h->freqs[index] += 1;
+            h->num_keys += 1;
+            if (h->freqs[index] != 1) {
+                fprintf(stderr, "error");
+            }
+            return 1;
+        } else if (strcmp(str, h->keys[index]) == 0) {
+            h->freqs[index] += 1;
+            return h->freqs[index];
+        } else {
+            return 0;
+        }
     }
-    return 0;
 }
 
 
