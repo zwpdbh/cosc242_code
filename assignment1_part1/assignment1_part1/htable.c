@@ -66,12 +66,13 @@ int htable_insert(htable h, char *str) {
         strcpy(h->keys[wordIndex], str);
         h->freqs[wordIndex] += 1;
         h->num_keys += 1;
+        h->stats[h->num_keys - 1] = 0;
         return 1;
     } else if (strcmp(str, h->keys[wordIndex]) == 0) {
         h->freqs[wordIndex] += 1;
         return h->freqs[wordIndex];
     } else {
-        int collision = 1;
+        int collision = 0;
         unsigned int index = wordIndex;
         while (collision <= h->capacity && h->keys[index] != NULL &&
                strcmp(str, h->keys[index]) != 0) {
