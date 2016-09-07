@@ -3,33 +3,30 @@
 #include "mylib.h"
 #include "htable.h"
 
-/**
+static void print_info(int freq, char *word) {
+    printf("%-4d %s\n", freq, word);
+}
+
+
 int main(void) {
     htable h = htable_new(113);
     char word[256];
-    char op;
     
+    FILE *infile = NULL;
     
-    while (2 == scanf(" %c %255s", &op, word)) {
-        if ('+' == op) {
-            htable_insert(h, word);
-        } else if ('?' == op) {
-            printf("%d %s\n", htable_search(h, word), word);
-        }
+    char *fileToBeChecked = "/Users/zw/Documents/Otago/COSC242/cosc242_code/lab12_HashTable/lab12_HashTable/dictionary.txt";
+    
+    if (NULL == (infile = fopen(fileToBeChecked, "r"))) {
+        fprintf(stderr, "can’t find file\n");
+        return EXIT_FAILURE;
     }
-
-    htable_free(h);
-    return EXIT_SUCCESS;
-}
- */
-int main(void) {
-    htable h = htable_new(18143);
-    char word[256];
-    while (getword(word, sizeof word, stdin) != EOF) {
+    
+    while (getword(word, sizeof word, infile) != EOF) {
         htable_insert(h, word);
     }
-    htable_print(h, stdout);
+    htable_print(h, print_info);
     htable_free(h);
+    fclose(infile);
     return EXIT_SUCCESS;
 }
 

@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define WORD_LENGTH 20
-
 
 struct htablerec {
     int capacity;
@@ -45,6 +43,9 @@ void htable_free(htable h) {
 
 
 int htable_insert(htable h, char *str) {
+    if (strcmp(str, "to") == 0) {
+        printf("the problem is %s\n", str);
+    }
     unsigned int wordInteger = htable_word_to_int(str);
     unsigned int wordIndex = wordInteger % h->capacity;
     
@@ -82,11 +83,11 @@ int htable_insert(htable h, char *str) {
 }
 
 
-void htable_print(htable h, FILE *stream) {
+void htable_print(htable h, void f(int freq, char *word)) {
     int i;
     for (i = 0 ; i < h->capacity; i++) {
         if (h->frequencies[i] != 0) {
-            fprintf(stream, "Index:%d -> %s, Frequencies: %d\n", i, h->items[i], h->frequencies[i]);
+            f(h->frequencies[i], h->items[i]);
         }
     }
 }
