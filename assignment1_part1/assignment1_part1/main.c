@@ -103,6 +103,8 @@ int main(int argc, char *argv[]) {
         printf("Fill time\t:%f\n", fillTime);
         printf("Search time\t:%f\n", searchTime);
         printf("Unknown words = %d\n", unknowWords);
+        
+        return EXIT_SUCCESS;
     }
     
     
