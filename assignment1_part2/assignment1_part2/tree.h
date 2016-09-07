@@ -19,3 +19,4 @@ extern tree setColourBlack(tree);
 extern void tree_output_dot(tree t, FILE *out);
 
 #endif /* tree_h */
+

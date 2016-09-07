@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     int withO = 0;
     char *outPutFileName = NULL;
     tree_t tree_type = BST;
+    tree r;
     
     clock_t start, end;
     float fillTime;
@@ -63,7 +64,7 @@ int main(int argc, char *argv[]) {
         }
     }
     
-    tree r = tree_new(tree_type);
+    r = tree_new(tree_type);
     
     start = clock();
     
@@ -74,6 +75,7 @@ int main(int argc, char *argv[]) {
     
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
+    
     
     if (withD == 1) {
         printf("%d\n", tree_depth(r));
