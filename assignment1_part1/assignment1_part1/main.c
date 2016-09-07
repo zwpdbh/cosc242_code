@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     float searchTime;
     
     int unknowWords = 0;
+    int numOfSnapshot = 0;
     int numOfKeys = 0;
     
     htable  h;
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
                 break;
             case 's':
                 printf("get option -s with argument: %s\n", optarg);
-                numOfKeys = atoi(optarg);
+                numOfSnapshot = atoi(optarg);
                 withS = 1;
                 break;
             case 'p':
@@ -73,11 +74,14 @@ int main(int argc, char *argv[]) {
     
     h = htable_new(capacity, method);
     start = clock();
+    
     while (getword(word, sizeof word, stdin) != EOF) {
         htable_insert(h, word);
     }
+    
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
+    numOfKeys = getNumberOfKeys(h);
     
     /**
      if -c
@@ -96,17 +100,19 @@ int main(int argc, char *argv[]) {
         }
         end = clock();
         searchTime = (end-start)/(double)CLOCKS_PER_SEC;
-        printf("Fill time\t:%f", fillTime);
-        printf("Search time\t:%f", searchTime);
-        printf("Unknown words = %d", unknowWords);
+        printf("Fill time\t:%f\n", fillTime);
+        printf("Search time\t:%f\n", searchTime);
+        printf("Unknown words = %d\n", unknowWords);
     }
     
     
     if (withP == 0) {
         htable_print(h, print_info);
     } else if (withP !=0 && withS == 0) {
-        htable_print_stats(h, stdout, getNumberOfKeys(h));
-    } else if (withP != 0 && withS != 0) {
+        htable_print_stats(h, stdout, numOfKeys);
+    } else if (withP != 0 && withS != 0 && numOfSnapshot < numOfKeys) {
+        htable_print_stats(h, stdout, numOfSnapshot);
+    } else if (withP != 0 && withS != 0 && numOfKeys < numOfSnapshot) {
         htable_print_stats(h, stdout, numOfKeys);
     }
     

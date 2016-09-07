@@ -4,9 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define WORD_LENGTH 20
-
-
 struct htablerec {
     int capacity;
     int num_keys;
