@@ -70,6 +70,7 @@ int htable_insert(htable h, char *str) {
         return 1;
     } else if (strcmp(str, h->keys[wordIndex]) == 0) {
         h->freqs[wordIndex] += 1;
+        h->stats[h->num_keys - 1] = 0;
         return h->freqs[wordIndex];
     } else {
         int collision = 0;
