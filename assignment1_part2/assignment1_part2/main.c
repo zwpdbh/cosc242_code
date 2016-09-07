@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "mylib.h"
-#include "rbt.h"
+#include "tree.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "getopt.h"

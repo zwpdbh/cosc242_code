@@ -1,4 +1,4 @@
-#include "rbt.h"
+#include "tree.h"
 #include <string.h>
 #include <stdlib.h>
 #include "mylib.h"
@@ -6,42 +6,42 @@
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
-struct rbt_node {
+struct tree_node {
     char *key;
-    rbt left;
-    rbt right;
-    rbt_colour colour;
+    tree left;
+    tree right;
+    tree_colour colour;
     tree_t tree_type;
 };
 
 
-static rbt left_rotate(rbt r) {
+static tree left_rotate(tree r) {
     
-    rbt x = r->right;
+    tree x = r->right;
     r->right = x->left;
     x->left = r;
     
     return x;
 }
 
-static rbt right_rotate(rbt r) {
+static tree right_rotate(tree r) {
     
-    rbt x = r->left;
+    tree x = r->left;
     r->left = x->right;
     x->right = r;
-
+    
     return x;
 }
 
-static rbt flipColour(rbt r) {
+static tree flipColour(tree r) {
     r->colour = RED;
     r->left->colour = BLACK;
     r->right->colour = BLACK;
     return r;
 }
 
-rbt rbt_new(tree_t type) {
-    rbt r = emalloc(sizeof(struct rbt_node));
+tree tree_new(tree_t type) {
+    tree r = emalloc(sizeof(struct tree_node));
     r->key = NULL;
     r->left = NULL;
     r->right = NULL;
@@ -51,7 +51,7 @@ rbt rbt_new(tree_t type) {
     return r;
 }
 
-static rbt rbt_fix(rbt r) {
+static tree tree_fix(tree r) {
     if (IS_RED(r->left) && IS_RED(r->left->left) && IS_RED(r->right)) {
         r = flipColour(r);
     }
@@ -98,10 +98,10 @@ static rbt rbt_fix(rbt r) {
     return r;
 }
 
-rbt rbt_insert(rbt r, char *str) {
+tree tree_insert(tree r, char *str) {
     int cmp;
     if (r == NULL) {
-        r = rbt_new(RBT);
+        r = tree_new(r->tree_type);
     }
     
     if (r->key == NULL) {
@@ -112,47 +112,47 @@ rbt rbt_insert(rbt r, char *str) {
     
     cmp = strcmp(str, r->key);
     if (cmp < 0) {
-        r->left = rbt_insert(r->left, str);
+        r->left = tree_insert(r->left, str);
     } else if (cmp > 0) {
-        r->right = rbt_insert(r->right, str);
+        r->right = tree_insert(r->right, str);
     }
     
     if (r->tree_type == RBT) {
-        r = rbt_fix(r);
+        r = tree_fix(r);
     }
     
     return r;
 }
 
-int rbt_search(rbt r, char *str) {
+int tree_search(tree r, char *str) {
     if (r == NULL) {
         return 0;
     }
     if (strcmp(str, r->key) == 0) {
         return 1;
     } else if (strcmp(str, r->key) < 0) {
-        return rbt_search(r->left, str);
+        return tree_search(r->left, str);
     } else {
-        return rbt_search(r->right, str);
+        return tree_search(r->right, str);
     }
 }
 
-void rbt_inorder(rbt r, void f(char *str)) {
+void tree_inorder(tree r, void f(char *str)) {
     if (r == NULL) {
         return;
     }
     if (r->left != NULL) {
-        rbt_inorder(r->left, f);
+        tree_inorder(r->left, f);
     }
     if (r->key != NULL) {
         f(r->key);
     }
     if (r->right != NULL) {
-        rbt_inorder(r->right, f);
+        tree_inorder(r->right, f);
     }
 }
 
-void rbt_preorder(rbt r, void f(char *str)) {
+void tree_preorder(tree r, void f(char *str)) {
     if (r == NULL) {
         return;
     }
@@ -165,26 +165,26 @@ void rbt_preorder(rbt r, void f(char *str)) {
         f(r->key);
     }
     if (r->left != NULL) {
-        rbt_preorder(r->left, f);
+        tree_preorder(r->left, f);
     }
     if (r->right != NULL) {
-        rbt_preorder(r->right, f);
+        tree_preorder(r->right, f);
     }
 }
 
 
 
-rbt rbt_free(rbt r) {
-
+tree tree_free(tree r) {
+    
     if (r->key != NULL) {
         free(r->key);
         r->key = NULL;
     }
     if (r->left != NULL) {
-        r->left = rbt_free(r->left);
+        r->left = tree_free(r->left);
     }
     if (r->right != NULL) {
-        r->right = rbt_free(r->right);
+        r->right = tree_free(r->right);
     }
     
     if (r->key == NULL && r->left == NULL && r->right == NULL) {
@@ -195,7 +195,7 @@ rbt rbt_free(rbt r) {
     return NULL;
 }
 
-rbt setColourBlack(rbt r) {
+tree setColourBlack(tree r) {
     r->colour = BLACK;
     return r;
 }
