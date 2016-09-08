@@ -6,7 +6,7 @@
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
-static tree_t my_tree_type;
+static tree_t tree_type;
 
 struct tree_node {
     char *key;
@@ -14,7 +14,6 @@ struct tree_node {
     tree right;
     tree_colour colour;
     int frequency;
-    tree_t tree_type;
 };
 
 
@@ -49,8 +48,8 @@ tree tree_new(tree_t type) {
     r->key = NULL;
     r->left = NULL;
     r->right = NULL;
-    my_tree_type = type;
-    r->tree_type = my_tree_type;
+    tree_type = type;
+
     r->colour = RED;
     r->frequency = 0;
     
@@ -107,7 +106,7 @@ static tree tree_fix(tree r) {
 tree tree_insert(tree r, char *str) {
     int cmp;
     if (r == NULL) {
-        r = tree_new(my_tree_type);
+        r = tree_new(tree_type);
     }
     
     if (r->key == NULL) {
@@ -126,7 +125,7 @@ tree tree_insert(tree r, char *str) {
         r->frequency += 1;
     }
     
-    if (r->tree_type == RBT) {
+    if (tree_type == RBT) {
         r = tree_fix(r);
     }
     
@@ -248,7 +247,7 @@ static void tree_output_dot_aux(tree t, FILE *out) {
     if(t->key != NULL) {
         fprintf(out, "\"%s\"[label=\"{<f0>%s:%d|{<f1>|<f2>}}\"color=%s];\n",
                 t->key, t->key, t->frequency,
-                (RBT == t->tree_type && RED == t->colour) ? "red":"black");
+                (RBT == tree_type && RED == t->colour) ? "red":"black");
     }
     if(t->left != NULL) {
         tree_output_dot_aux(t->left, out);

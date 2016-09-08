@@ -29,9 +29,12 @@ int main(int argc, char *argv[]) {
     
     htable  h;
     char *fileToBeChecked = NULL;
-    int displayContentOfHashTable = 0;
+    int withC = 0;
+    int withE = 0;
     int withP = 0;
     int withS = 0;
+    
+    int i;
     
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
@@ -44,10 +47,11 @@ int main(int argc, char *argv[]) {
                 break;
             case 'c':
                 printf("get option -c with argument: %s\n", optarg);
+                withC = 1;
                 fileToBeChecked = optarg;
                 break;
             case 'e':
-                displayContentOfHashTable = 1;
+                withE = 1;
                 break;
             case 's':
                 printf("get option -s with argument: %s\n", optarg);
@@ -72,12 +76,12 @@ int main(int argc, char *argv[]) {
     h = htable_new(capacity, method);
     start = clock();
     
-    if (NULL == (infile = fopen("/Users/zw/Documents/Otago/COSC242/cosc242_code/assignment1_part1/assignment1_part1/dictionary.txt", "r"))) {
+    if (NULL == (infile = fopen("./dictionary.txt", "r"))) {
         fprintf(stderr, "can’t find file\n");
         return EXIT_FAILURE;
     }
 
-    int i = 0;
+    i = 0;
     while (getword(word, sizeof word, infile) != EOF) {
         printf("\n\n%d\t", i);
         htable_insert(h, word);
@@ -87,11 +91,8 @@ int main(int argc, char *argv[]) {
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
     fclose(infile);
-    /**
-     if -c
-     */
-//    fileToBeChecked = "/Users/zw/Documents/Otago/COSC242/cosc242_code/assignment1_part1/assignment1_part1/document.txt";
-    if (fileToBeChecked != NULL) {
+
+    if (withC == 1) {
         if (NULL == (infile = fopen(fileToBeChecked, "r"))) {
             fprintf(stderr, "can’t find file\n");
             return EXIT_FAILURE;
@@ -110,13 +111,15 @@ int main(int argc, char *argv[]) {
         printf("Unknown words = %d\n", unknowWords);
     }
     
-    if (withP == 0 && displayContentOfHashTable == 1) {
+    if (withP == 0 && withE == 1) {
         htable_content(h, stdout);
         htable_print(h, print_info);
     } else if (withP !=0 && withS == 0) {
         htable_print_stats(h, stdout, 10);
     } else if (withP != 0 && withS != 0) {
         htable_print_stats(h, stdout, numOfSnapshot);
+    } else {
+        htable_print(h, print_info);
     }
     
     fclose(infile);
