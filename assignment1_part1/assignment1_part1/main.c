@@ -36,7 +36,6 @@ int main(int argc, char *argv[]) {
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
             case 't':
-                printf("get option -t with argument: %s\n", optarg);
                 capacity = primegt(atoi(optarg));
                 break;
             case 'd':
@@ -78,9 +77,11 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    
+    int i = 0;
     while (getword(word, sizeof word, infile) != EOF) {
+        printf("\n\n%d\t", i);
         htable_insert(h, word);
+        i += 1;
     }
 
     end = clock();

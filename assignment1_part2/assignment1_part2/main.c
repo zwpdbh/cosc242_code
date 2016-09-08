@@ -12,6 +12,7 @@ static void print_info(int freq, char *word) {
 }
 
 int main(int argc, char *argv[]) {
+    
     const char *optstring = "c:dpf:orh";
     char option;
     char word[256];
@@ -21,9 +22,8 @@ int main(int argc, char *argv[]) {
     char *fileToBeChecked = NULL;
     int withD = 0;
     int withP = 0;
-    int withF = 0;
     int withO = 0;
-    char *outPutFileName = NULL;
+    char *outPutFileName = "./tree-view.dot";
     tree_t tree_type = BST;
     tree r;
     
@@ -46,11 +46,10 @@ int main(int argc, char *argv[]) {
                 withP = 1;
                 withD = 0;
             case 'f':
-                withF = 1;
+                outPutFileName = optarg;
                 break;
             case 'o':
                 withO = 1;
-                outPutFileName = optarg;
                 break;
             case 'r':
                 tree_type = RBT;
@@ -79,7 +78,7 @@ int main(int argc, char *argv[]) {
     
     if (withD == 1) {
         printf("%d\n", tree_depth(r));
-        EXIT_SUCCESS;
+        return EXIT_SUCCESS;
     } else if (withC == 1) {
         /**
          -c fileToBeChecked
@@ -90,7 +89,7 @@ int main(int argc, char *argv[]) {
         }
         start = clock();
         while (getword(word, sizeof word, infile) != EOF) {
-            if (tree_search(r, word)) {
+            if (!tree_search(r, word)) {
                 printf("%s\n", word);
                 unknowWords += 1;
             }
@@ -105,16 +104,9 @@ int main(int argc, char *argv[]) {
         return EXIT_SUCCESS;
     } else if (withP == 1) {
         printf("?");
-    } else if (withO == 1 && withF ==0) {
-        if (NULL == (infile = fopen("output-dot.txt", "r"))) {
-            fprintf(stderr, "can’t find file\n");
-            return EXIT_FAILURE;
-        }
-        tree_output_dot(r, infile);
-        fclose(infile);
-    } else if (withO == 1 && withF == 1) {
-        if (NULL == (infile = fopen(outPutFileName, "r"))) {
-            fprintf(stderr, "can’t find file\n");
+    } else if (withO == 1) {
+        if (NULL == (infile = fopen(outPutFileName, "w"))) {
+            fprintf(stderr, "can’t open file:%s\n", outPutFileName);
             return EXIT_FAILURE;
         }
         tree_output_dot(r, infile);
@@ -123,5 +115,6 @@ int main(int argc, char *argv[]) {
         tree_preorder(r, print_info);
     }
     
+    return EXIT_SUCCESS;
 }
 

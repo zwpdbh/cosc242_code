@@ -60,7 +60,7 @@ static int factor(int x) {
     return 1;
 }
 extern int primegt(int n) {
-    int bound = n + 1;
+    int bound = n;
     while (bound > 0) {
         if (factor(bound)) {
             break;

@@ -6,14 +6,17 @@
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
+static tree_t my_tree_type;
+
 struct tree_node {
     char *key;
     tree left;
     tree right;
     tree_colour colour;
-    tree_t tree_type;
     int frequency;
+    tree_t tree_type;
 };
+
 
 
 static tree left_rotate(tree r) {
@@ -46,7 +49,8 @@ tree tree_new(tree_t type) {
     r->key = NULL;
     r->left = NULL;
     r->right = NULL;
-    r->tree_type = type;
+    my_tree_type = type;
+    r->tree_type = my_tree_type;
     r->colour = RED;
     r->frequency = 0;
     
@@ -103,12 +107,13 @@ static tree tree_fix(tree r) {
 tree tree_insert(tree r, char *str) {
     int cmp;
     if (r == NULL) {
-        r = tree_new(BST);
+        r = tree_new(my_tree_type);
     }
     
     if (r->key == NULL) {
         r->key = emalloc(sizeof(char) * (strlen(str) + 1));
         strcpy(r->key, str);
+        r->frequency = 1;
         return r;
     }
     
