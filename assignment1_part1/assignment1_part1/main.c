@@ -48,7 +48,6 @@ int main(int argc, char *argv[]) {
                 fileToBeChecked = optarg;
                 break;
             case 'e':
-                printf("get opetion -e\n");
                 displayContentOfHashTable = 1;
                 break;
             case 's':
@@ -78,17 +77,19 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "can’t find file\n");
         return EXIT_FAILURE;
     }
+
     
     while (getword(word, sizeof word, infile) != EOF) {
         htable_insert(h, word);
     }
-    fclose(infile);
+
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
-    
+    fclose(infile);
     /**
      if -c
      */
+//    fileToBeChecked = "/Users/zw/Documents/Otago/COSC242/cosc242_code/assignment1_part1/assignment1_part1/document.txt";
     if (fileToBeChecked != NULL) {
         if (NULL == (infile = fopen(fileToBeChecked, "r"))) {
             fprintf(stderr, "can’t find file\n");
@@ -106,14 +107,11 @@ int main(int argc, char *argv[]) {
         printf("Fill time\t:%f\n", fillTime);
         printf("Search time\t:%f\n", searchTime);
         printf("Unknown words = %d\n", unknowWords);
-        
-        return EXIT_SUCCESS;
     }
     
-    
-    if (withP == 0) {
-        return EXIT_SUCCESS;
-//        htable_print(h, print_info);
+    if (withP == 0 && displayContentOfHashTable == 1) {
+        htable_content(h, stdout);
+        htable_print(h, print_info);
     } else if (withP !=0 && withS == 0) {
         htable_print_stats(h, stdout, 10);
     } else if (withP != 0 && withS != 0) {

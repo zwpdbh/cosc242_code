@@ -67,6 +67,8 @@ int htable_insert(htable h, char *str) {
     unsigned int wordInteger = htable_word_to_int(str);
     unsigned int wordIndex = wordInteger % h->capacity;
     unsigned int step = htable_step(h, wordInteger);
+    int collision = 0;
+    unsigned int index;
     
     if (h->keys[wordIndex] == NULL) {
         h->keys[wordIndex] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
@@ -75,50 +77,56 @@ int htable_insert(htable h, char *str) {
         h->num_keys += 1;
         h->stats[h->num_keys - 1] = 0;
         
-        printf("\nindex %u is empty, \tplace '%s' at index: %u, \tcollision is %d\n", wordIndex, str, wordIndex ,h->stats[h->num_keys - 1]);
+        
+//        printf("\nindex %u is empty, \tplace '%s' at index: %u, \tcollision is %d\n", wordIndex, str, wordIndex ,h->stats[h->num_keys - 1]);
         
         return 1;
     } else if (strcmp(str, h->keys[wordIndex]) == 0) {
         h->freqs[wordIndex] += 1;
         h->stats[h->num_keys - 1] = 0;
         
-        printf("\nindex %u is not empty, word '%s' is at %u, \tplace '%s' at index: %u, \tcollision is %d\n", wordIndex, h->keys[wordIndex], wordIndex, str, wordIndex, h->stats[h->num_keys - 1]);
+//        printf("\nindex %u is not empty, word '%s' is at %u, \tplace '%s' at index: %u, \tcollision is %d\n", wordIndex, h->keys[wordIndex], wordIndex, str, wordIndex, h->stats[h->num_keys - 1]);
+        
         
         return h->freqs[wordIndex];
     } else {
-        printf("\nput word '%s' at index %u, but word '%s' is at index %u\n", str, wordIndex, h->keys[wordIndex], wordIndex);
-        int collision = 0;
-        unsigned int index = wordIndex;
-        while (collision <= h->capacity && h->keys[index] != NULL &&
+        
+//        printf("\nput word '%s' at index %u, but word '%s' is at index %u\n", str, wordIndex, h->keys[wordIndex], wordIndex);
+        
+        
+        index = wordIndex;
+        while (collision < h->capacity && h->keys[index] != NULL &&
                strcmp(str, h->keys[index]) != 0) {
-            printf("index %u is occupied with '%s', ", index, h->keys[index]);
+            
+//            printf("index %u is occupied with '%s', ", index, h->keys[index]);
+            
             if (h->method == LINEAR_P) {
                 index += 1;
             } else {
                 index += step;
             }
             index = index % h->capacity;
-            printf("move to the next index %u\n", index);
+//            printf("move to the next index %u\n", index);
             collision++;
         }
-        h->stats[h->num_keys - 1] = collision;
-    
+        
         if (h->keys[index] == NULL) {
-            if (h->freqs[index] != 0) {
-                fprintf(stderr, "error, the freqs at index %u is %d\n", index, h->freqs[index]);
-            }
-            printf("index %u is %s, so put word '%s' at index %u, with collision: %d\n", index, h->keys[index], str, index, collision);
+//            printf("index %u is %s, so put word '%s' at index %u, with collision: %d\n", index, h->keys[index], str, index, collision);
             h->keys[index] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
             strcpy(h->keys[index], str);
             h->freqs[index] += 1;
             h->num_keys += 1;
-
+            h->stats[h->num_keys - 1] = collision;
+            
             return 1;
         } else if (strcmp(str, h->keys[index]) == 0) {
-            printf("index %u is %s, so put word '%s' at index %u, with collision: %d\n", index, h->keys[index], str, index, collision);
+            
+//            printf("index %u is %s, so put word '%s' at index %u, with collision: %d\n", index, h->keys[index], str, index, collision);
+            
             h->freqs[index] += 1;
             return h->freqs[index];
         } else {
+//            printf("collision time is: %d, table is full\n", collision);
             return 0;
         }
     }
@@ -136,6 +144,8 @@ void htable_print(htable h, void f(int freq, char *word)) {
 
 void htable_content(htable h, FILE *stream) {
     int i;
+    printf("  Pos  Freq  Stats  Word\n");
+    printf("----------------------------------------\n");
     for (i = 0; i < h->capacity; i++) {
         if (h->freqs[i] != 0) {
             fprintf(stream, "%5d %5d %5d   %s\n",

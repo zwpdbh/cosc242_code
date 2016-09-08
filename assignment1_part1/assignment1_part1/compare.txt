@@ -1,0 +1,196 @@
+  Pos  Freq  Stats  Word
+----------------------------------------
+    0     1     0   remove
+    1     3     0   how
+    2     1     0   find
+    3     0     0   
+    4     0     1   
+    5     0     0   
+    6     1     0   print
+    7     0     0   
+    8     2     0   header
+    9     1     0   country
+   10     1     0   read
+   11     1     0   our
+   12     1     0   are
+   13     1     0   legal
+   14     1     0   should
+   15     1     0   written
+   16     2     0   tolstoy
+   17     1     1   downloading
+   18     1     0   viewing
+   19     2     0   leo
+   20     1     0   any
+   21     2     0   information
+   22     2     2   your
+   23     4     0   this
+   24     1     1   change
+   25     1     0   used
+   26     1     0   rights
+   27     1     0   out
+   28     0     0   
+   29     1     0   world
+   30     0     1   
+   31     0     1   
+   32     0     0   
+   33     0     1   
+   34     0     0   
+   35     0     0   
+   36     0     0   
+   37     1     0   changing
+   38     0     0   
+   39     1     0   before
+   40     5     0   project
+   41     2     1   of
+   42     0     0   
+   43     0     0   
+   44     0     1   
+   45     0     0   
+   46     2     2   laws
+   47     2     0   do
+   48     0     0   
+   49     0     0   
+   50     0     0   
+   51     0     4   
+   52     1     1   sure
+   53     3     0   or
+   54     3     0   file
+   55     1     0   small
+   56     1     2   donation
+   57     1     0   9
+   58     1     3   all
+   59     3     0   about
+   60     1     0   specific
+   61     1     0   you
+   62     1     1   can
+   63     1     3   bottom
+   64     1     0   involved
+   65     1     2   thing
+   66     1     0   peace
+   67     2     0   other
+   68     0     0   
+   69     0     1   
+   70     0     8   
+   71     1     2   edit
+   72     1     3   redistributing
+   73     1     6   war
+   74     2     0   please
+   75     1     0   at
+   76     1     6   may
+   77     1     2   make
+   78     1     0   get
+   79     1     0   important
+   80     1     0   first
+   81     0     0   
+   82     0     0   
+   83     0     0   
+   84     2     0   copyright
+   85     0     0   
+   86     0     0   
+   87     0     0   
+   88     2     0   in
+   89     5     0   gutenberg
+   90     3     0   be
+   91     3     0   ebook
+   92     4     0   to
+   93     1     0   check
+   94     1     0   it
+   95     1     0   without
+   96     1     0   is
+   97     1     0   restrictions
+   98     1     0   also
+   99     1     0   a
+  100     1     0   permission
+  101     0     0   
+  102     1     0   seen
+  103     1     0   for
+  104     1     0   included
+  105     0     0   
+  106     9     0   the
+  107     1     0   series
+  108     2     0   by
+  109     1     0   over
+  110     1     0   when
+  111     2     0   not
+  112     5     0   and
+1    remove
+3    how
+1    find
+1    print
+2    header
+1    country
+1    read
+1    our
+1    are
+1    legal
+1    should
+1    written
+2    tolstoy
+1    downloading
+1    viewing
+2    leo
+1    any
+2    information
+2    your
+4    this
+1    change
+1    used
+1    rights
+1    out
+1    world
+1    changing
+1    before
+5    project
+2    of
+2    laws
+2    do
+1    sure
+3    or
+3    file
+1    small
+1    donation
+1    9
+1    all
+3    about
+1    specific
+1    you
+1    can
+1    bottom
+1    involved
+1    thing
+1    peace
+2    other
+1    edit
+1    redistributing
+1    war
+2    please
+1    at
+1    may
+1    make
+1    get
+1    important
+1    first
+2    copyright
+2    in
+5    gutenberg
+3    be
+3    ebook
+4    to
+1    check
+1    it
+1    without
+1    is
+1    restrictions
+1    also
+1    a
+1    permission
+1    seen
+1    for
+1    included
+9    the
+1    series
+2    by
+1    over
+1    when
+2    not
+5    and
