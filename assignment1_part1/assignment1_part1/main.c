@@ -4,6 +4,7 @@
 #include "htable.h"
 #include "mylib.h"
 #include <time.h>
+#include <string.h>
 
 
 static void print_info(int freq, char *word) {
@@ -34,19 +35,15 @@ int main(int argc, char *argv[]) {
     int withP = 0;
     int withS = 0;
     
-    int i;
-    
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
             case 't':
                 capacity = primegt(atoi(optarg));
                 break;
             case 'd':
-                printf("get option -d: using DOUBLE HASHING\n");
                 method = DOUBLE_H;
                 break;
             case 'c':
-                printf("get option -c with argument: %s\n", optarg);
                 withC = 1;
                 fileToBeChecked = optarg;
                 break;
@@ -54,7 +51,6 @@ int main(int argc, char *argv[]) {
                 withE = 1;
                 break;
             case 's':
-                printf("get option -s with argument: %s\n", optarg);
                 numOfSnapshot = atoi(optarg);
                 withS = 1;
                 break;
@@ -76,22 +72,19 @@ int main(int argc, char *argv[]) {
     h = htable_new(capacity, method);
     start = clock();
     
-    if (NULL == (infile = fopen("./dictionary.txt", "r"))) {
-        fprintf(stderr, "can’t find file\n");
-        return EXIT_FAILURE;
-    }
 
-    i = 0;
-    while (getword(word, sizeof word, infile) != EOF) {
-        printf("\n\n%d\t", i);
+    while (getword(word, sizeof word, stdin) != EOF) {
         htable_insert(h, word);
-        i += 1;
     }
 
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
-    fclose(infile);
+    
 
+    if (withE == 1) {
+        htable_content(h, stderr);
+    }
+    
     if (withC == 1) {
         if (NULL == (infile = fopen(fileToBeChecked, "r"))) {
             fprintf(stderr, "can’t find file\n");
@@ -109,14 +102,14 @@ int main(int argc, char *argv[]) {
         printf("Fill time\t:%f\n", fillTime);
         printf("Search time\t:%f\n", searchTime);
         printf("Unknown words = %d\n", unknowWords);
+        
+        return EXIT_SUCCESS;
     }
     
-    if (withP == 0 && withE == 1) {
-        htable_content(h, stdout);
-        htable_print(h, print_info);
-    } else if (withP !=0 && withS == 0) {
+    
+    if (withP == 1 && withS == 0) {
         htable_print_stats(h, stdout, 10);
-    } else if (withP != 0 && withS != 0) {
+    } else if (withP == 1 && withS == 1) {
         htable_print_stats(h, stdout, numOfSnapshot);
     } else {
         htable_print(h, print_info);
