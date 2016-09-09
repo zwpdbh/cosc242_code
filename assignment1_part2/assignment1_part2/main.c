@@ -12,7 +12,7 @@ static void print_info(int freq, char *word) {
 }
 
 void printHelpInfo() {
-    printf("Usage: ./sample-tree [OPTION]... <STDIN>\n");
+    printf("Usage: ./tree-asgn [OPTION]... <STDIN>\n");
     printf("\n");
     printf("Perform various operations using a binary tree.  By default, words\n");
     printf("are read from stdin and added to the tree, before being printed out\n");

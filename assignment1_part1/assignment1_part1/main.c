@@ -11,6 +11,26 @@ static void print_info(int freq, char *word) {
     printf("%-4d %s\n", freq, word);
 }
 
+void printHelpInfo() {
+    printf("Usage: ./htable-asgn [OPTION]... <STDIN>\n");
+    printf("\n");
+    printf("Perform various operations using a hash table.  By default, words are\n");
+    printf("read from stdin and added to the hash table, before being printed out\n");
+    printf("alongside their frequencies to stdout.\n");
+    printf("\n");
+    printf(" -c FILENAME  Check spelling of words in FILENAME using words\n");
+    printf(" \t      from stdin as dictionary.  Print unknown words to\n");
+    printf(" \t      stdout, timing info & count to stderr (ignore -p)\n");
+    printf(" -d           Use double hashing (linear probing is the default)\n");
+    printf(" -e           Display entire contents of hash table on stderr\n");
+    printf(" -p           Print stats info instead of frequencies & words\n");
+    printf(" -s SNAPSHOTS Show SNAPSHOTS stats snapshots (if -p is used)\n");
+    printf(" -t TABLESIZE Use the first prime >= TABLESIZE as htable size\n");
+    printf("\n");
+    printf(" -h           Display this message");
+    printf("\n");
+}
+
 int main(int argc, char *argv[]) {
     const char *optstring = "ht:c:deps:";
     char option;
@@ -58,11 +78,10 @@ int main(int argc, char *argv[]) {
                 withP = 1;
                 break;
             case 'h':
-                /**print out usage*/
-                printf("get option -h\n");
-                break;
+                printHelpInfo();
+                return EXIT_SUCCESS;
             default:
-                printf("can not get corrent option, exit programm\n");
+                printHelpInfo();
                 return EXIT_FAILURE;
         }
         
