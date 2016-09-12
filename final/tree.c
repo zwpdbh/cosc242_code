@@ -17,9 +17,12 @@ struct tree_node {
 };
 
 
-
+/**
+ * helper function which rotate left on specified node r.
+ * @param r is the node on which rotate tree left.
+ * @return the tree after the operation.
+ */
 static tree left_rotate(tree r) {
-    
     tree x = r->right;
     r->right = x->left;
     x->left = r;
@@ -27,6 +30,11 @@ static tree left_rotate(tree r) {
     return x;
 }
 
+/**
+ * helper function which rotate right on specified node r.
+ * @param r is the node on which rotate tree right.
+ * @return the tree after the operation.
+ */
 static tree right_rotate(tree r) {
     
     tree x = r->left;
@@ -36,6 +44,11 @@ static tree right_rotate(tree r) {
     return x;
 }
 
+/**
+ * a helper function which set the node and its both children's color.
+ * @param r is the node on which we operate on.
+ * @return r the tree after the operation.
+ */
 static tree flipColour(tree r) {
     r->colour = RED;
     r->left->colour = BLACK;
@@ -43,6 +56,13 @@ static tree flipColour(tree r) {
     return r;
 }
 
+
+/**
+ * create a new tree base on the type.
+ * @param type is the type you specified, could be:
+ *  BST or RBT.
+ * @param r the tree has been created.
+ */
 tree tree_new(tree_t type) {
     tree r = emalloc(sizeof(struct tree_node));
     r->key = NULL;
@@ -56,6 +76,12 @@ tree tree_new(tree_t type) {
     return r;
 }
 
+
+/**
+ * a helper method which fix RBT property based on node r
+ * @param r the tree node to fix on.
+ * @return the tree which has been fixed.
+ */
 static tree tree_fix(tree r) {
     if (IS_RED(r->left) && IS_RED(r->left->left) && IS_RED(r->right)) {
         r = flipColour(r);
@@ -63,7 +89,6 @@ static tree tree_fix(tree r) {
     if (IS_RED(r->left) && IS_RED(r->left->left) && IS_BLACK(r->right)) {
         r = right_rotate(r);
         r->colour = BLACK;
-        r->left->colour = RED;
         r->right->colour = RED;
     }
     
@@ -74,7 +99,6 @@ static tree tree_fix(tree r) {
         r->left = left_rotate(r->left);
         r = right_rotate(r);
         r->colour = BLACK;
-        r->left->colour = RED;
         r->right->colour = RED;
     }
     
@@ -86,7 +110,6 @@ static tree tree_fix(tree r) {
         r = left_rotate(r);
         r->colour = BLACK;
         r->left->colour = RED;
-        r->right->colour = RED;
     }
     
     if (IS_RED(r->right) && IS_RED(r->right->right) && IS_RED(r->left)) {
@@ -97,12 +120,18 @@ static tree tree_fix(tree r) {
         r = left_rotate(r);
         r->colour = BLACK;
         r->left->colour = RED;
-        r->right->colour = RED;
     }
     
     return r;
 }
 
+
+/**
+ * return a tree after inserting a key into the tree r
+ * @param r the tree
+ * @param str is the key
+ * @return the tree
+ */
 tree tree_insert(tree r, char *str) {
     int cmp;
     if (r == NULL) {
@@ -133,8 +162,10 @@ tree tree_insert(tree r, char *str) {
 }
 
 /**
- return 0 if not found
- return 1 if found
+ * search a key in a tree and return the searching result.
+ * @param r the tree we are searching in.
+ * @param str the key we are looking for in the tree.
+ * @return int which 0 means search failed, otherwise return the key's freqs.
  */
 int tree_search(tree r, char *str) {
     if (r == NULL) {
@@ -149,6 +180,11 @@ int tree_search(tree r, char *str) {
     }
 }
 
+/**
+ * inorder traversal of tree.
+ * @param r is the tree we want to traversal.
+ * @param f is the passed in function for print out the key.
+ */
 void tree_inorder(tree r, void f(char *str)) {
     if (r == NULL) {
         return;
@@ -164,6 +200,11 @@ void tree_inorder(tree r, void f(char *str)) {
     }
 }
 
+/**
+ * inorder traversal of tree.
+ * @param r is the tree we want to traversal.
+ * @param f is the passed in function for print out the key and its frequency.
+ */
 void tree_preorder(tree r, void f(int freq, char *str)) {
     if (r == NULL) {
         return;
@@ -180,7 +221,11 @@ void tree_preorder(tree r, void f(int freq, char *str)) {
 }
 
 
-
+/**
+ * free the memory a tree has been allocated.
+ * @param r is the tree we want to free.
+ * @param return the freed tree which is NULL.
+ */
 tree tree_free(tree r) {
     
     if (r->key != NULL) {
@@ -202,17 +247,31 @@ tree tree_free(tree r) {
     return NULL;
 }
 
+/**
+ * set the root colour of a tree to black.
+ * @param r is the tree we want to set.
+ * @return return the modified tree.
+ */
 tree setColourBlack(tree r) {
     r->colour = BLACK;
     return r;
 }
 
+/**
+ * return the depth of a tree.
+ * @param r is the tree we want to get the depth.
+ * @return a int which is the depth of the tree.
+ */
 int tree_depth(tree r) {
     int leftD;
     int rightD;
-    int depth = 0;
+    
     if (r == NULL) {
-        return depth;
+        return 0;
+    }
+    
+    if (r != NULL && r->left == NULL && r->right == NULL) {
+        return 0;
     }
     
     if (r->left == NULL) {

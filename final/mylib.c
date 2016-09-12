@@ -5,6 +5,11 @@
 #include <ctype.h>
 #include <math.h>
 
+/**
+ * a helper function which return the pointer to the allocated memory.
+ * @param s is the size of memory will be allocated.
+ * @return result is the void pointer to the allocated memory.
+ */
 void *emalloc(size_t s) {
     void *result = malloc(s);
     if (result == NULL) {
@@ -14,6 +19,12 @@ void *emalloc(size_t s) {
     return result;
 }
 
+/**
+ * a helper function which return the pointer to the allocated memeory.
+ * @param p is the resized pointer to the already allocated memory.
+ * @param s is the size of memeory will be re-allocated.
+ * @return the void pointer to the allocated memory.
+ */
 void *remalloc(void *p, size_t s) {
     void *result = realloc(p, s);
     if (result == NULL) {
@@ -23,7 +34,13 @@ void *remalloc(void *p, size_t s) {
     return result;
 }
 
-
+/**
+ * a helper function get the single word from a specifyed input.
+ * @param s is the varible hold the a single word.
+ * @param limit is the limit of the size of the word s can hold.
+ * @param stream is the stream of the input.
+ * @return if the return value is EOF, means it reach the end of input.
+ */
 int getword(char *s, int limit, FILE *stream) {
     int c;
     char *w = s;
@@ -48,7 +65,11 @@ int getword(char *s, int limit, FILE *stream) {
     return w - s;
 }
 
-
+/**
+ * a function which convert a string into int.
+ * @param word is the word will be converted.
+ * @result which is a unsigned int converted from string word.
+ */
 unsigned int word_to_int(char *word) {
     unsigned int result = 0;
     while (*word != '\0') {
@@ -57,7 +78,12 @@ unsigned int word_to_int(char *word) {
     return result;
 }
 
-
+/**
+ * test whether the specified number x is prime or not. 
+ * If n can only be devided by 1, return 1, otherwise return 0.
+ * @param x the number tested
+ * @return if it is prime number, return 1 otherwise return 0.
+ */
 static int factor(int x) {
     int f = 2;
     while (f <= sqrt(x)) {
@@ -69,6 +95,12 @@ static int factor(int x) {
     }
     return 1;
 }
+
+/**
+ * return the primer number greater or equal to the int specified.
+ * @param n the number specified.
+ * @return bound a primer number.
+ */
 extern int primegt(int n) {
     int bound = n;
     while (bound > 0) {

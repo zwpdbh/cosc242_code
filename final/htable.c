@@ -13,6 +13,12 @@ struct htablerec {
     hashing_t method;
 };
 
+
+/**
+ * a helper function which get a word, then convert it into a unsigned int.
+ * @param word the word get from input.
+ * @return result the converted result from word.
+ */
 unsigned int htable_word_to_int(char *word) {
     unsigned int result = 0;
     while (*word != '\0') {
@@ -21,6 +27,14 @@ unsigned int htable_word_to_int(char *word) {
     return result;
 }
 
+/**
+ * create a new htable based on two paramters: its capacity and the method.
+ * @param capacity the capacity of the table, the actural table's size will be
+ *  a prime number whih greater or equal to the capacity you specified.
+ * @param hashing_t method the probing method, which can take two values:
+ *  LINEAR_P, or DOUBLE_H.
+ * @return table the htable returned.
+ */
 htable htable_new(int capacity, hashing_t method) {
     int i;
     
@@ -41,7 +55,10 @@ htable htable_new(int capacity, hashing_t method) {
     return table;
 }
 
-
+/**
+ * free the htable.
+ * @param h the hashtable to be freed.
+ */
 void htable_free(htable h) {
     int i;
     for (i = 0; i < h->capacity; i++) {
@@ -53,15 +70,27 @@ void htable_free(htable h) {
     free(h);
 }
 
-
+/**
+ * A helper function which calculate the steps.
+ * @param h the hashtable to work on.
+ * @param i_key the unsigned int which converted from string.
+ * @return the steps calculated.
+ */
 static unsigned int htable_step(htable h, unsigned int i_key) {
-    return 1 + (i_key % (h->capacity - 1));
+    if (h->method == LINEAR_P) {
+        return 1;
+    } else {
+        return 1 + (i_key % (h->capacity - 1));
+    }
 }
 
 /**
- return 0 means insert failed
- return 1 means insert succeed at the fisrt time
- return >1 means the frequencies the word has been inserted
+ * insert a string into the hashtable.
+ * @param h the hash table to insert into.
+ * @param str the string to insert.
+ * @return a int to represent the result of insertion:
+ *  0 means insertion failed.
+ *  others is the frequencies the word has been inserted.
  */
 int htable_insert(htable h, char *str) {
     unsigned int wordInteger = htable_word_to_int(str);
@@ -77,59 +106,42 @@ int htable_insert(htable h, char *str) {
         h->num_keys += 1;
         h->stats[h->num_keys-1] = 0;
         
-        
-        
         return 1;
     } else if (strcmp(str, h->keys[wordIndex]) == 0) {
         h->freqs[wordIndex] += 1;
-        
         return h->freqs[wordIndex];
     } else {
-        
-        
-        
-        
         index = wordIndex;
         while (collision < h->capacity && h->keys[index] != NULL &&
                strcmp(str, h->keys[index]) != 0) {
             
-            
-            
-            if (h->method == LINEAR_P) {
-                index += 1;
-            } else {
-                index += step;
-            }
+            index += step;
             index = index % h->capacity;
-            
             collision++;
         }
         
         if (h->keys[index] == NULL) {
-            
             h->keys[index] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
             strcpy(h->keys[index], str);
             h->freqs[index] += 1;
             h->num_keys += 1;
             h->stats[h->num_keys-1] = collision;
-            
-            
-            
             return 1;
         } else if (strcmp(str, h->keys[index]) == 0) {
-            
-            
-            
             h->freqs[index] += 1;
             return h->freqs[index];
         } else {
-            
             return 0;
         }
     }
 }
 
-
+/**
+ * print the hash table by the word stored and its' frequencies.
+ * @param h the hashtable to print out.
+ * @param void f(int freq, char *word) a function will be passed in to print out
+ *  the detail format.
+ */
 void htable_print(htable h, void f(int freq, char *word)) {
     int i;
     for (i = 0 ; i < h->capacity; i++) {
@@ -138,7 +150,13 @@ void htable_print(htable h, void f(int freq, char *word)) {
         }
     }
 }
-
+    
+/**
+ * print out the content of htable which display the index, frequency, stats, 
+ * and the key if it exists.
+ * @param h the hashtable to print.
+ * @param stream specify on which stream the content will output.
+ */
 void htable_content(htable h, FILE *stream) {
     int i;
     printf("  Pos  Freq  Stats  Word\n");
@@ -154,6 +172,12 @@ void htable_content(htable h, FILE *stream) {
     }
 }
 
+/**
+ * return a int to represent the result of search.
+ * @param h the hashtable to search with.
+ * @param str the key we want to search.
+ * @return 0 means failed, others means the frequencies of the searching sting.
+ */
 int htable_search(htable h, char *str) {
     int collision = 0;
     int searchIndex = htable_word_to_int(str) % h->capacity;
@@ -167,15 +191,11 @@ int htable_search(htable h, char *str) {
         if (strcmp(str, h->keys[searchIndex]) == 0) {
             return h->freqs[searchIndex];
         }
-        if (h->method == DOUBLE_H) {
-            searchIndex = (searchIndex + step ) % h->capacity;
-        } else {
-            searchIndex = (searchIndex + 1 ) % h->capacity;
-        }
+
+        searchIndex = (searchIndex + step ) % h->capacity;
         collision++;
     }
     
-
     return 0;
 }
 
