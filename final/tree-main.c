@@ -6,11 +6,19 @@
 #include "getopt.h"
 #include <time.h>
 
-
+/**
+ * a function will be passed into the tree traversal function.
+ * @param freq represent the frequency of the word.
+ * @param word is the key in the node.
+ */
 static void print_info(int freq, char *word) {
     printf("%-4d %s\n", freq, word);
 }
 
+/**
+ * a function will be called when -h option is used. It prints out the helper
+ * message.
+ */
 void printHelpInfo() {
     printf("Usage: ./tree-asgn [OPTION]... <STDIN>\n");
     printf("\n");
@@ -29,6 +37,17 @@ void printHelpInfo() {
     printf("\n");
 }
 
+/**
+ * main programme will be excuted.
+ * By default, words are read from stdin and 
+ * added to tree before being printed out
+ * alongside their frequencies to stdout.
+ * @param an integer saying how many arguments 
+ *  there are argc for “argument count”
+ * @param an array of strings in which the arguments 
+ *  are stored (argv for “argument vector ”).
+ * @return an int to indicate if the programme excuted successfully or not.
+ */
 int main(int argc, char *argv[]) {
     
     const char *optstring = "c:df:orh";
@@ -103,9 +122,9 @@ int main(int argc, char *argv[]) {
         }
         end = clock();
         searchTime = (end-start)/(double)CLOCKS_PER_SEC;
-        printf("Fill time\t:%f\n", fillTime);
-        printf("Search time\t:%f\n", searchTime);
-        printf("Unknown words = %d\n", unknowWords);
+        fprintf(stderr, "Fill time\t:%f\n", fillTime);
+        fprintf(stderr, "Search time\t:%f\n", searchTime);
+        fprintf(stderr, "Unknown words = %d\n", unknowWords);
         fclose(infile);
         return EXIT_SUCCESS;
         
