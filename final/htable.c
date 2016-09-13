@@ -1,8 +1,9 @@
-#include "htable.h"
-#include "mylib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "htable.h"
+#include "mylib.h"
+
 
 struct htablerec {
     int capacity;
@@ -93,19 +94,25 @@ static unsigned int htable_step(htable h, unsigned int i_key) {
  *  others is the frequencies the word has been inserted.
  */
 int htable_insert(htable h, char *str) {
+    int collision = 0;
     unsigned int wordInteger = htable_word_to_int(str);
     unsigned int index = wordInteger % h->capacity;
-    unsigned int step = htable_step(h, wordInteger);
-    int collision = 0;
+    unsigned int step;
+    if (h->capacity == 1) {
+        step = 1;
+    } else {
+        step = htable_step(h, wordInteger);
+    }    
     
-    while (collision < h->capacity && h->keys[index] != NULL &&
+    while (collision <= h->capacity && h->keys[index] != NULL &&
            strcmp(str, h->keys[index]) != 0) {
-        
+
         index += step;
         index = index % h->capacity;
         collision++;
     }
-    
+
+
     if (h->keys[index] == NULL) {
         h->keys[index] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
         strcpy(h->keys[index], str);
@@ -176,7 +183,7 @@ int htable_search(htable h, char *str) {
         if (strcmp(str, h->keys[searchIndex]) == 0) {
             return h->freqs[searchIndex];
         }
-        
+
         searchIndex = (searchIndex + step ) % h->capacity;
         collision++;
     }

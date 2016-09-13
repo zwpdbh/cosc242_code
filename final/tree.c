@@ -232,11 +232,7 @@ void tree_preorder(tree r, void f(int freq, char *str)) {
  * @param return the freed tree which is NULL.
  */
 tree tree_free(tree r) {
-    
-    if (r->key != NULL) {
-        free(r->key);
-        r->key = NULL;
-    }
+    free(r->key);
     if (r->left != NULL) {
         r->left = tree_free(r->left);
     }
@@ -244,10 +240,7 @@ tree tree_free(tree r) {
         r->right = tree_free(r->right);
     }
     
-    if (r->key == NULL && r->left == NULL && r->right == NULL) {
-        free(r);
-        r = NULL;
-    }
+    free(r);
     
     return NULL;
 }

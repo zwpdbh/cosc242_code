@@ -1,9 +1,9 @@
-#include "mylib.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
-#include <math.h>
+#include "mylib.h"
 
 /**
  * a helper function which return the pointer to the allocated memory.
@@ -79,7 +79,7 @@ unsigned int word_to_int(char *word) {
 }
 
 /**
- * test whether the specified number x is prime or not. 
+ * test whether the specified number x is prime or not.
  * If n can only be devided by 1, return 1, otherwise return 0.
  * @param x the number tested
  * @return if it is prime number, return 1 otherwise return 0.
@@ -97,11 +97,11 @@ static int factor(int x) {
 }
 
 /**
- * return the primer number greater or equal to the int specified.
+ * return the prime number greater or equal to the int specified.
  * @param n the number specified.
- * @return bound a primer number.
+ * @return bound a prime number.
  */
-extern int primegt(int n) {
+int primegt(int n) {
     int bound = n;
     while (bound > 0) {
         if (factor(bound)) {
@@ -112,4 +112,3 @@ extern int primegt(int n) {
     }
     return bound;
 }
-

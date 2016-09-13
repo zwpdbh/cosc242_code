@@ -53,13 +53,13 @@ int main(int argc, char *argv[]) {
     const char *optstring = "c:df:orh";
     char option;
     char word[256];
-    int unknowWords = 0;
+    int unknownWords = 0;
     
     int withC = 0;
     char *fileToBeChecked = NULL;
     int withD = 0;
     int withO = 0;
-    char *outPutFileName = "./tree-view.dot";
+    char *outputFileName = "./tree-view.dot";
     tree_t tree_type = BST;
     tree r;
     
@@ -67,7 +67,10 @@ int main(int argc, char *argv[]) {
     float fillTime;
     float searchTime;
     FILE *infile;
-    
+
+    /*
+     * Begin processing the argument from the command line
+     */
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
             case 'c':
@@ -78,7 +81,7 @@ int main(int argc, char *argv[]) {
                 withD = 1;
                 break;
             case 'f':
-                outPutFileName = optarg;
+                outputFileName = optarg;
                 break;
             case 'o':
                 withO = 1;
@@ -107,33 +110,40 @@ int main(int argc, char *argv[]) {
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
     
-    
+    /* Checks the input file against a dictionary (-c <filename> argument)*/
     if (withC == 1) {
+        /*Open file and check if it is valid*/
         if (NULL == (infile = fopen(fileToBeChecked, "r"))) {
             fprintf(stderr, "can’t find file\n");
+            tree_free(r);
             return EXIT_FAILURE;
         }
         start = clock();
+        /*Get words from input file, and search for them in dictionary*/
         while (getword(word, sizeof word, infile) != EOF) {
+            /*If the word isn't in the dictionary*/
             if (!tree_search(r, word)) {
                 printf("%s\n", word);
-                unknowWords += 1;
+                unknownWords += 1;
             }
         }
         end = clock();
         searchTime = (end-start)/(double)CLOCKS_PER_SEC;
         fprintf(stderr, "Fill time\t:%f\n", fillTime);
         fprintf(stderr, "Search time\t:%f\n", searchTime);
-        fprintf(stderr, "Unknown words = %d\n", unknowWords);
+        fprintf(stderr, "Unknown words = %d\n", unknownWords);
         fclose(infile);
+        tree_free(r);
         return EXIT_SUCCESS;
         
     } else if (withD == 1) {
         printf("%d\n", tree_depth(r));
+        tree_free(r);
         return EXIT_SUCCESS;
     } else if (withO == 1) {
-        if (NULL == (infile = fopen(outPutFileName, "w"))) {
-            fprintf(stderr, "can’t open file:%s\n", outPutFileName);
+        if (NULL == (infile = fopen(outputFileName, "w"))) {
+            fprintf(stderr, "Cannot open file: %s\n", outputFileName);
+            tree_free(r);
             return EXIT_FAILURE;
         }
         tree_output_dot(r, infile);
@@ -141,7 +151,8 @@ int main(int argc, char *argv[]) {
     } else {
         tree_preorder(r, print_info);
     }
-    
+
+    tree_free(r);
     return EXIT_SUCCESS;
 }
 

@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <string.h>
 #include "getopt.h"
 #include "htable.h"
 #include "mylib.h"
-#include <time.h>
-#include <string.h>
+
 
 
 /**
@@ -45,40 +46,45 @@ void printHelpInfo() {
  * By default, words are read from stdin and
  * added to hashtable before being printed out
  * alongside their frequencies to stdout.
- * @param an integer saying how many arguments
+ * @param argc an integer saying how many arguments
  *  there are argc for “argument count”
- * @param an array of strings in which the arguments
+ * @param argv an array of strings in which the arguments
  *  are stored (argv for “argument vector ”).
- * @return an int to indicate if the programme excuted successfully or not.
+ * @return integer 1 to indicate if the programme excuted successfully or not.
  */
 int main(int argc, char *argv[]) {
     const char *optstring = "ht:c:deps:";
     char option;
     char word[256];
     int capacity = 113;
-    
+
     FILE *infile = NULL;
     clock_t start, end;
-    
+
     hashing_t method = LINEAR_P;
-    
-    float fillTime;
-    float searchTime;
-    
-    int unknowWords = 0;
+
+    double fillTime;
+    double searchTime;
+
+    int unknownWords = 0;
     int numOfSnapshot = 0;
-    
+
     htable  h;
     char *fileToBeChecked = NULL;
     int withC = 0;
     int withE = 0;
     int withP = 0;
     int withS = 0;
-    
+    /*
+     * Begin processing the argument from the command line
+     */
     while ((option = getopt(argc, argv, optstring)) != EOF) {
         switch (option) {
             case 't':
                 capacity = primegt(atoi(optarg));
+                if(capacity <= 0){
+                    return EXIT_FAILURE;
+                }
                 break;
             case 'd':
                 method = DOUBLE_H;
@@ -104,13 +110,11 @@ int main(int argc, char *argv[]) {
                 printHelpInfo();
                 return EXIT_FAILURE;
         }
-        
+
     }
-    
-    
+
     h = htable_new(capacity, method);
     start = clock();
-    
 
     while (getword(word, sizeof word, stdin) != EOF) {
         htable_insert(h, word);
@@ -118,22 +122,27 @@ int main(int argc, char *argv[]) {
 
     end = clock();
     fillTime = (end-start)/(double)CLOCKS_PER_SEC;
-    
 
+    /* prints all the details of the table (-e argument)*/
     if (withE == 1) {
         htable_print_entire_table(h, stderr);
     }
-    
+
+    /* Checks the input file against a dictionary (-c <filename> argument)*/
     if (withC == 1) {
+        /*open file and check if it is valid*/
         if (NULL == (infile = fopen(fileToBeChecked, "r"))) {
-            fprintf(stderr, "can’t find file\n");
+            fprintf(stderr, "Cannot find file: %s\n", fileToBeChecked);
+            htable_free(h);
             return EXIT_FAILURE;
         }
         start = clock();
+        /*Get words from input file, and search for them in the dictionary*/
         while (getword(word, sizeof word, infile) != EOF) {
+            /*If the word isn't in the dictionary*/
             if (htable_search(h, word) == 0) {
                 printf("%s\n", word);
-                unknowWords += 1;
+                unknownWords += 1;
             }
         }
         end = clock();
@@ -141,13 +150,14 @@ int main(int argc, char *argv[]) {
         searchTime = (end-start)/(double)CLOCKS_PER_SEC;
         fprintf(stderr, "Fill time\t:%f\n", fillTime);
         fprintf(stderr, "Search time\t:%f\n", searchTime);
-        fprintf(stderr, "Unknown words = %d\n", unknowWords);
-        
+        fprintf(stderr, "Unknown words = %d\n", unknownWords);
+
         htable_free(h);
         return EXIT_SUCCESS;
     }
-    
-    
+
+
+    /*Prints table stats (-p -s arguments)*/
     if (withP == 1 && withS == 0) {
         htable_print_stats(h, stdout, 10);
     } else if (withP == 1 && withS == 1) {
@@ -155,9 +165,8 @@ int main(int argc, char *argv[]) {
     } else {
         htable_print(h, print_info);
     }
-    
+
     htable_free(h);
-    
+
     return EXIT_SUCCESS;
 }
-
