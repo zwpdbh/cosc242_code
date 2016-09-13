@@ -157,7 +157,7 @@ void htable_print(htable h, void f(int freq, char *word)) {
  * @param h the hashtable to print.
  * @param stream specify on which stream the content will output.
  */
-void htable_content(htable h, FILE *stream) {
+void htable_print_entire_table(htable h, FILE *stream) {
     int i;
     printf("  Pos  Freq  Stats  Word\n");
     printf("----------------------------------------\n");

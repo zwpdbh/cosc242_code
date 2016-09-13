@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
     
 
     if (withE == 1) {
-        htable_content(h, stderr);
+        htable_print_entire_table(h, stderr);
     }
     
     if (withC == 1) {

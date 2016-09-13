@@ -6,7 +6,12 @@
 #define IS_BLACK(x) ((NULL == (x)) || (BLACK == (x)->colour))
 #define IS_RED(x) ((NULL != (x)) && (RED == (x)->colour))
 
+/**
+ * define a static varible for storing the type of tree, which is a enum
+ * either BST OR RBT.
+ */
 static tree_t tree_type;
+
 
 struct tree_node {
     char *key;
