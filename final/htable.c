@@ -37,7 +37,7 @@ unsigned int htable_word_to_int(char *word) {
  */
 htable htable_new(int capacity, hashing_t method) {
     int i;
-    
+
     htable table = emalloc(sizeof(*table));
     table->capacity = capacity;
     table->num_keys = 0;
@@ -45,13 +45,13 @@ htable htable_new(int capacity, hashing_t method) {
     table->keys = emalloc(table->capacity * sizeof(table->keys[0]));
     table->stats = emalloc(table->capacity * sizeof(table->stats[0]));
     table->method = method;
-    
+
     for (i = 0; i < table->capacity; i++) {
         table->freqs[i] = 0;
         table->keys[i] = NULL;
         table->stats[i] = 0;
     }
-    
+
     return table;
 }
 
@@ -94,45 +94,30 @@ static unsigned int htable_step(htable h, unsigned int i_key) {
  */
 int htable_insert(htable h, char *str) {
     unsigned int wordInteger = htable_word_to_int(str);
-    unsigned int wordIndex = wordInteger % h->capacity;
+    unsigned int index = wordInteger % h->capacity;
     unsigned int step = htable_step(h, wordInteger);
     int collision = 0;
-    unsigned int index;
     
-    if (h->keys[wordIndex] == NULL) {
-        h->keys[wordIndex] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
-        strcpy(h->keys[wordIndex], str);
-        h->freqs[wordIndex] += 1;
+    while (collision < h->capacity && h->keys[index] != NULL &&
+           strcmp(str, h->keys[index]) != 0) {
+        
+        index += step;
+        index = index % h->capacity;
+        collision++;
+    }
+    
+    if (h->keys[index] == NULL) {
+        h->keys[index] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
+        strcpy(h->keys[index], str);
+        h->freqs[index] += 1;
         h->num_keys += 1;
-        h->stats[h->num_keys-1] = 0;
-        
+        h->stats[h->num_keys-1] = collision;
         return 1;
-    } else if (strcmp(str, h->keys[wordIndex]) == 0) {
-        h->freqs[wordIndex] += 1;
-        return h->freqs[wordIndex];
+    } else if (strcmp(str, h->keys[index]) == 0) {
+        h->freqs[index] += 1;
+        return h->freqs[index];
     } else {
-        index = wordIndex;
-        while (collision < h->capacity && h->keys[index] != NULL &&
-               strcmp(str, h->keys[index]) != 0) {
-            
-            index += step;
-            index = index % h->capacity;
-            collision++;
-        }
-        
-        if (h->keys[index] == NULL) {
-            h->keys[index] = emalloc((strlen(str) + 1) * sizeof(h->keys[0][0]));
-            strcpy(h->keys[index], str);
-            h->freqs[index] += 1;
-            h->num_keys += 1;
-            h->stats[h->num_keys-1] = collision;
-            return 1;
-        } else if (strcmp(str, h->keys[index]) == 0) {
-            h->freqs[index] += 1;
-            return h->freqs[index];
-        } else {
-            return 0;
-        }
+        return 0;
     }
 }
 
@@ -150,9 +135,9 @@ void htable_print(htable h, void f(int freq, char *word)) {
         }
     }
 }
-    
+
 /**
- * print out the content of htable which display the index, frequency, stats, 
+ * print out the content of htable which display the index, frequency, stats,
  * and the key if it exists.
  * @param h the hashtable to print.
  * @param stream specify on which stream the content will output.
@@ -182,8 +167,8 @@ int htable_search(htable h, char *str) {
     int collision = 0;
     int searchIndex = htable_word_to_int(str) % h->capacity;
     int step = htable_step(h, htable_word_to_int(str));
-    
-    
+
+
     while (collision <= h->capacity) {
         if (h->keys[searchIndex] == NULL) {
             return 0;
@@ -191,11 +176,11 @@ int htable_search(htable h, char *str) {
         if (strcmp(str, h->keys[searchIndex]) == 0) {
             return h->freqs[searchIndex];
         }
-
+        
         searchIndex = (searchIndex + step ) % h->capacity;
         collision++;
     }
-    
+
     return 0;
 }
 
@@ -217,7 +202,7 @@ static void print_stats_line(htable h, FILE *stream, int percent_full) {
     int at_home = 0;
     int max_collisions = 0;
     int i = 0;
-    
+
     if (current_entries > 0 && current_entries <= h->num_keys) {
         for (i = 0; i < current_entries; i++) {
             if (h->stats[i] == 0) {
@@ -228,7 +213,7 @@ static void print_stats_line(htable h, FILE *stream, int percent_full) {
             }
             average_collisions += h->stats[i];
         }
-        
+
         fprintf(stream, "%4d %10d %10.1f %10.2f %11d\n", percent_full,
                 current_entries, at_home * 100.0 / current_entries,
                 average_collisions / current_entries, max_collisions);
@@ -253,7 +238,7 @@ static void print_stats_line(htable h, FILE *stream, int percent_full) {
  */
 void htable_print_stats(htable h, FILE *stream, int num_stats) {
     int i;
-    
+
     fprintf(stream, "\n%s\n\n",
             h->method == LINEAR_P ? "Linear Probing" : "Double Hashing");
     fprintf(stream, "Percent   Current   Percent    Average      Maximum\n");
@@ -264,4 +249,3 @@ void htable_print_stats(htable h, FILE *stream, int num_stats) {
     }
     fprintf(stream, "-----------------------------------------------------\n\n");
 }
-
