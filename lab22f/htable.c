@@ -12,7 +12,7 @@ struct htablerec {
 
 static unsigned int htable_word_to_int(char *word) {
     unsigned int result = 0;
-    
+
     while (*word != '\0') {
         result = (*word++ + 31 * result);
     }
@@ -38,14 +38,15 @@ void htable_free(htable h) {
     for(i = 0; i < h->capacity; i++) {
         free(h->keys[i]);
     }
+    free(h->keys);
     free(h);
 }
 
 int htable_insert(htable h, char *key) {
     unsigned int wordInt = htable_word_to_int(key);
-    unsigned int  wordIndex = wordInt % h->capacity;
+    unsigned int wordIndex = wordInt % h->capacity;
     int collisionCount = 0;
-    
+
     while(collisionCount <= h->capacity && h->num_keys <= h->capacity) {
         if(h->keys[wordIndex] == NULL) {
             h->keys[wordIndex] = emalloc((strlen(key) + 1) * sizeof(h->keys[0][0]));
