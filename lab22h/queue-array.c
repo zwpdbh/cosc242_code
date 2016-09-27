@@ -20,13 +20,17 @@ static void *emalloc(size_t s) {
 
 queue queue_new() {
     int default_size = 7;
+    int i;
 
     queue result = emalloc(sizeof(*result));
     result->capacity = default_size;
     result->num_items = 0;
     result->head = 0;
     result->items = emalloc(sizeof(result->items[0]) * result->capacity);
-    
+   
+    for(i = 0; i<result->capacity; i++) {
+        result->items[i] = 0.0;
+    }
     return result;
 }
 
@@ -54,7 +58,7 @@ double dequeue(queue q) {
 void queue_print(queue q) {
 
     /* print queue contents one per line to 2 decimal places */
-    int index;
+    int index = 0;
     int i;
     for(i = 0; i < q->num_items; i++) {
         index = (q->head + i) % q->capacity;
