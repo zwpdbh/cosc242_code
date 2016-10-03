@@ -47,3 +47,28 @@ graph graph_free(graph g) {
     free(g);
     return g;
 }
+
+graph graph_add_edge(graph g, int v1, int v2, graph_t t) {
+    if (t == DIRECTED) {
+        g->edges[v1][v2] = 1;
+    } else {
+        g->edges[v1][v2] = 1;
+        g->edges[v2][v1] = 1;
+    }
+    return g;
+}
+
+void graph_print(graph g) {
+    int i;
+    int j;
+    printf("adjacency list:\n");
+    for (i = 0; i < g->size; i++) {
+        printf("%d | ", i);
+        for (j = 0; j < g->size; j++) {
+            if (g->edges[i][j] == 1) {
+                printf("%d ", j);
+            }
+        }
+        printf("\n");
+    }
+}
