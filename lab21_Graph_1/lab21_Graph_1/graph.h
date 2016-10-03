@@ -9,6 +9,7 @@ typedef struct graphrec *graph;
 typedef struct vertexrec vertex;
 
 
-extern graph graph_new(int size_of_vertices);
+extern graph graph_new(int vertices_s);
+extern graph graph_free(graph g);
 
 #endif /* graph_h */
