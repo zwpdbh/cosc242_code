@@ -14,5 +14,6 @@ extern graph graph_new(int vertices_s);
 extern graph graph_free(graph g);
 extern graph graph_add_edge(graph g, int v1, int v2, graph_t t);
 extern void graph_print(graph g);
-
+extern void graph_bfs(graph g, int source);
+extern void graph_dfs(graph g);
 #endif /* graph_h */

@@ -3,6 +3,8 @@
 #include "graph.h"
 #include "queue.h"
 
+static int step;
+
 struct vertexrec {
     int predecessor;
     int distance;
@@ -124,3 +126,42 @@ void graph_bfs(graph g, int source) {
    }
    q = queue_free(q);
 }
+
+/**
+ * Deth First Search
+ */
+static void visit(graph g, int v) {
+    int i;
+    g->vertices[v].state = VISITED_SELF;
+    step += 1;
+    g->vertices[v].distance = step;
+    for (i = 0; i < g->size; i++) {
+        if (g->edges[v][i] == 1 && g->vertices[i].state == UNVISITED) {
+            g->vertices[i].predecessor = v;
+            visit(g, i);
+        }
+    }
+    step++;
+    g->vertices[v].state = VISITED_DESCENDANTS;
+    g->vertices[v].finish = step;
+}
+
+void graph_dfs(graph g) {
+    int i;
+    for (i = 0 ; i < g->size; i++) {
+        g->vertices[i].state = UNVISITED;
+        g->vertices[i].predecessor = -1;
+    }
+    step = 0;
+    for (i = 0; i < g->size; i++) {
+        if (g->vertices[i].state == UNVISITED) {
+            visit(g, i);
+        }
+    }
+    
+    printf("vertex distance pred finish\n");
+    for (i = 0; i < g->size; i++) {
+        printf("%d\t%4d\t%3d\t%3d\n", i, g->vertices[i].distance, g->vertices[i].predecessor, g->vertices[i].finish);
+    }
+}
+
